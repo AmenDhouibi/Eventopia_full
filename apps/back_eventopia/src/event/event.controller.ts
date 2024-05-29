@@ -8,13 +8,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { eventfilterdto } from './dto/event.filter.dto';
 import { UserService } from 'src/user/user.service';
 import { UpdateEventDto } from './dto/update.dto';
+import { MailingService } from '../mailing/mailing.service';
 
 @Controller('events')
 @UseGuards(AuthGuard())
 export class EventController {
   constructor(
     private readonly userservice : UserService,
-    private readonly eventService: EventService
+    private readonly eventService: EventService,
+    private readonly MailingService : MailingService,
     ) {}
 
   @Get()
@@ -121,5 +123,58 @@ export class EventController {
       }
       throw error;
     }
+  }
+
+
+  // INivite methods 
+  
+  @Post('invite/guests/:id')
+  async inviteGuests(
+      @Body('emails') emails: string | string[],
+      @Param('id') id: string,
+  ) {
+      try {
+          // Fetch event details
+          const event = await this.eventService.findById(id);
+          if (!event) {
+              throw new NotFoundException('Event not found');
+          }
+
+          // Construct invite link
+          const inviteLink = `http://localhost:5000/${id}/inviteguests`;
+
+          // Send invitation email
+          await this.MailingService.sendInvitationEmail(emails, event.name, inviteLink);
+
+          return { message: 'Guest invitations sent successfully' };
+      } catch (error) {
+          console.error('Error sending guest invitations:', error);
+          return { message: 'Failed to send guest invitations', error };
+      }
+  }
+
+  @Post('invite/staff/:id')
+  async inviteStaff(
+      @Body('emails') emails: string[],
+      @Param('id') id: string,
+  ) {
+      try {
+          // Fetch event details
+          const event = await this.eventService.findById(id);
+          if (!event) {
+              throw new NotFoundException('Event not found');
+          }
+
+          // Construct invite link
+          const inviteLink = `http://localhost:5000/${id}/invitestaff`;
+
+          // Send invitation email
+          await this.MailingService.sendInvitationEmail(emails, event.name, inviteLink);
+
+          return { message: 'Staff invitations sent successfully' };
+      } catch (error) {
+          console.error('Error sending staff invitations:', error);
+          return { message: 'Failed to send staff invitations', error };
+      }
   }
 }
