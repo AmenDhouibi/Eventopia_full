@@ -5,6 +5,7 @@ import NotFound from "pages/NotFound";
 import Ajouteventpage from "pages/Ajouteventpage";
 import SendmailguestpagePage from "pages/Sendmailguestpage";
 import SendmaildriverpagePage from "pages/Sendmaildriverpage";
+import GuestformpagePage from "pages/Guestformpage";
 
 const ProjectRoutes = () => {
   let element = useRoutes([
@@ -22,6 +23,10 @@ const ProjectRoutes = () => {
     {
       path: "sendmaildriverpage",
       element: <SendmaildriverpagePage />,
+    },
+    {
+      path: "guestformpage",
+      element: <GuestformpagePage />,
     },
   ]);
 
