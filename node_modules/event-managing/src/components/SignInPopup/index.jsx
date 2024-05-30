@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const SignInPopup = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignIn = () => {
-    // Handle sign-in logic
+  const handleSignIn = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/auth/signin', {
+        email,
+        password,
+      });
+      const token = response.data.accesstoken;
+      console.log('Token:', token);
+    } catch (error) {
+      console.error('Error signing in:', error);
+    }
   };
 
   return (

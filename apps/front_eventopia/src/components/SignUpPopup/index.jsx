@@ -1,12 +1,33 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 
 const SignUpPopup = ({ isOpen, onClose }) => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [age, setAge] = useState('');
 
   const handleSignUp = () => {
-    // Handle sign-up logic
+    const userDataForSignup = {
+      username,
+      email,
+      password,
+      age
+    };
+    console.log(userDataForSignup);
+    
+    axios.post('http://localhost:3000/api/auth', userDataForSignup)
+      .then(response => {
+        console.log('Signup successful:', response.data);
+      })
+      .catch(error => {
+        console.error('Error signing up:', error);
+      });
   };
+
+  
+  
 
   return (
     <>
@@ -21,12 +42,20 @@ const SignUpPopup = ({ isOpen, onClose }) => {
             <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
             <form className="space-y-4">
               <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" className="mt-1 p-3 block w-full border border-gray-300 rounded-md" value={username} onChange={(e) => setUsername(e.target.value)} />
+              </div>
+              <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <input type="email" id="email" name="email" className="mt-1 p-3 block w-full border border-gray-300 rounded-md" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" id="password" name="password" className="mt-1 p-3 block w-full border border-gray-300 rounded-md" value={password} onChange={(e) => setPassword(e.target.value)} />
+              </div>
+              <div>
+                <label htmlFor="age" className="block text-sm font-medium text-gray-700">Age</label>
+                <input type="number" id="age" name="age" className="mt-1 p-3 block w-full border border-gray-300 rounded-md" value={age} onChange={(e) => setAge(e.target.value)} />
               </div>
               <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handleSignUp}>Sign Up</button>
             </form>

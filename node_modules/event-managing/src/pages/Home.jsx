@@ -25,8 +25,19 @@ const Home = () => {
   const closeSignUpPopup = () => {
     setSignUpOpen(false);
   };
+
   return (
     <>
+      {(isSignInOpen || isSignUpOpen) && (
+        <div
+          className="fixed top-0 left-0 w-full h-full bg-white opacity-50 z-50"
+          onClick={() => {
+            closeSignInPopup();
+            closeSignUpPopup();
+          }}
+        />
+      )}
+
       <div className="mb-24 flex flex-col items-center">
         <header className="flex items-center justify-between gap-5 self-stretch md:flex-col">
           <div className="relative mb-[7px] h-[85px] w-[19%] md:w-full">
@@ -44,25 +55,22 @@ const Home = () => {
             </Text>
           </div>
           <div className="flex w-[25%] items-center justify-center md:w-full sm:flex-col">
-          <Button
-            size="xs"
-            shape="square"
-            className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
-            onClick={openSignInPopup}
-          >
-            sign in
-          </Button>
-          <SignInPopup isOpen={isSignInOpen} onClose={closeSignInPopup} />
-            
-          <Button
-            size="xs"
-            shape="square"
-            className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
-            onClick={openSignUpPopup}
-          >
-            sign up
-          </Button>
-          <SignUpPopup isOpen={isSignUpOpen} onClose={closeSignUpPopup} />
+            <Button
+              size="xs"
+              shape="square"
+              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+              onClick={openSignInPopup}
+            >
+              sign in
+            </Button>
+            <Button
+              size="xs"
+              shape="square"
+              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+              onClick={openSignUpPopup}
+            >
+              sign up
+            </Button>
             <Img
               src="images/img_frame_blue_gray_900.svg"
               alt="image_one"
@@ -218,6 +226,10 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* Sign-in and Sign-up popups */}
+      <SignInPopup isOpen={isSignInOpen} onClose={closeSignInPopup} />
+      <SignUpPopup isOpen={isSignUpOpen} onClose={closeSignUpPopup} />
     </>
   );
 };
