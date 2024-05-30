@@ -8,6 +8,7 @@ import { FlightModule } from './flight/flight.module';
 import { UserModule } from './user/user.module';
 import { MailingModule } from './mailing/mailing.module';
 
+
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb+srv://amine101yahya:GcRhxvg4btkFT0Dl@eventopia.9uxsykr.mongodb.net/?retryWrites=true&w=majority&appName=Eventopia'),

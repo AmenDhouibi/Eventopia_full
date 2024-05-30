@@ -19,7 +19,12 @@
     "turbo": "^1.13.3"
   },
   "dependencies": {
+    "@nestjs/common": "^10.3.8",
     "@nestjs/config": "^3.2.2",
-    "@nestjs/platform-express": "^10.3.8"
+    "@nestjs/platform-express": "^10.3.8",
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
+    "jwt-decode": "^4.0.0",
+    "react-scripts": "^5.0.1"
   }
 }

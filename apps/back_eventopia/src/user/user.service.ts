@@ -7,6 +7,10 @@ export class UserService {
         private readonly UserRepository: UserRepository
     ) {}
 
+    async getUserById(id: string) {
+        return await this.UserRepository.Getuser(id);
+    }
+
     async getUserbyusername(username: string) {
         try {
             const user = await this.UserRepository.Getuser(username);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Text, Button, Img, Heading } from "../components";
 import SignInPopup from "../components/SignInPopup";
@@ -7,7 +7,23 @@ import SignUpPopup from "../components/SignUpPopup";
 const Home = () => {
   const [isSignInOpen, setSignInOpen] = useState(false);
   const [isSignUpOpen, setSignUpOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+
+  const handleLoginStatus = (status) => {
+    setIsLoggedIn(status);
+  };
+  
+
+  const handlelogin = () => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  };
+  
   const openSignInPopup = () => {
     setSignInOpen(true);
     setSignUpOpen(false); // Ensure sign-up popup is closed
@@ -25,6 +41,9 @@ const Home = () => {
   const closeSignUpPopup = () => {
     setSignUpOpen(false);
   };
+
+  
+  
   return (
     <>
       <div className="mb-24 flex flex-col items-center">
@@ -52,7 +71,7 @@ const Home = () => {
           >
             sign in
           </Button>
-          <SignInPopup isOpen={isSignInOpen} onClose={closeSignInPopup} />
+          <SignInPopup isOpen={isSignInOpen} onClose={closeSignInPopup} updateLoginStatus={handleLoginStatus} />
             
           <Button
             size="xs"
@@ -167,6 +186,7 @@ const Home = () => {
             </Button>
           </div>
           <div className="mt-[30px] flex w-[35%] flex-col items-left md:w-full">
+          {isLoggedIn ? (
             <Link
               to="/ajouteventpage"
               style={{ color: "#87CEFA", textDecoration: "none" }}
@@ -184,9 +204,27 @@ const Home = () => {
                 }
                 className=" flex w-[130%] gap-[35px] rounded-[30px] font-regular sm:px-5"
               >
-                create an event{" "}
+                Create an event{" "}
               </Button>
             </Link>
+          ) : (
+            <Button
+              color="blue_gray_100_7f"
+              size="md"
+              variant="fill"
+              rightIcon={
+                <Img
+                  src="images/img_arrowleft.svg"
+                  alt="arrow_left"
+                  className="h-[20px] w-[20px]"
+                />
+              }
+              className=" flex w-[130%] gap-[35px] rounded-[30px] font-regular sm:px-5"
+              onClick={openSignInPopup}
+            >
+              Sign in to create an event{" "}
+            </Button>
+          )}
             <>
               <br />
             </>

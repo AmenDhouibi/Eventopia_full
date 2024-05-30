@@ -1,11 +1,73 @@
 import React, { useState } from 'react';
+import { jwtDecode } from 'jwt-decode'; // Import jwtDecode as a named export
+import axios from 'axios';
 
-const SignInPopup = ({ isOpen, onClose }) => {
+const SignInPopup = ({ isOpen, onClose,updateLoginStatus }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userId, setUserId] = useState('');
+  const [user, setUser] = useState('');
+  const [accessToken, setAccessToken] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleSignIn = () => {
-    // Handle sign-in logic
+  
+
+
+  const handleSignIn = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/auth/signin', {
+        email,
+        password
+      });
+      
+      // Log the entire response to understand its structure
+      console.log('Response:', response);
+
+      // Ensure the response contains the accessToken
+      const accesstoken = response.data.accesstoken;
+      if (!accesstoken) {
+        throw new Error('No access token found in response');
+      }
+
+      console.log('Access Token:', accesstoken); // Log the token to verify it's a valid string
+
+      setAccessToken(accesstoken);
+
+      // Decode the token to extract user information
+      let decodedToken;
+      try {
+        decodedToken = jwtDecode(accesstoken);
+        console.log('Decoded Token:', decodedToken); // Log the decoded token to verify its contents
+      } catch (err) {
+        console.error('Error decoding token:', err);
+        throw new Error('Failed to decode token');
+      }
+      const { user_id } = decodedToken;
+      setUserId(user_id);
+      localStorage.setItem('userId', user_id);
+      const userDetailsResponse = await axios.get(`http://localhost:3000/api/user/id/${user_id}`);
+      // Convert the userDetails object to a string
+      const userDetailsString = JSON.stringify(userDetailsResponse.data);
+      setUser(userDetailsString)
+      console.log(user)
+      setIsLoggedIn(true);
+      updateLoginStatus(true);
+      localStorage.setItem('accessToken', accesstoken);
+      localStorage.setItem('user', userDetailsString);
+
+
+
+      alert(`Hello , you successfully logged in`);
+
+      // Store access token for later use
+      
+
+      // Close the sign-in popup
+      onClose();
+    } catch (error) {
+      console.error('Sign in failed', error);
+      alert('Please Verify ur Credentiels ! ')
+    }
   };
 
   return (
