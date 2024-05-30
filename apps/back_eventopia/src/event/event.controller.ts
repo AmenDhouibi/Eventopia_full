@@ -9,16 +9,16 @@ import { eventfilterdto } from './dto/event.filter.dto';
 import { UserService } from 'src/user/user.service';
 import { UpdateEventDto } from './dto/update.dto';
 import { MailingService } from '../mailing/mailing.service';
+import { IStaff } from 'src/staff/staff.model';
+import { IGuest } from 'src/guest/guest.model';
 
 @Controller('events')
-@UseGuards(AuthGuard())
 export class EventController {
   constructor(
     private readonly userservice : UserService,
     private readonly eventService: EventService,
     private readonly MailingService : MailingService,
     ) {}
-
   @Get()
   async findEvent(@Query() filterDto: eventfilterdto): Promise<IEvent[]> {
     try {
@@ -35,14 +35,15 @@ export class EventController {
   async findById(@Param('id') eventId: string, @GetUser() user: IUser): Promise<IEvent> {
     return this.eventService.findById(eventId);
   }
-
   @Post()
+  @UseGuards(AuthGuard())
   async create(@Body() createEventDto: CreateEventDto, @GetUser() user: IUser): Promise<IEvent> {
     const event = this.eventService.create(createEventDto, user);
     return event;
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard())
   async delete(@Param('id') eventId: string, @GetUser() user: IUser): Promise<void> {
     const event = await this.eventService.findById(eventId);
     if (user.id !== event.event_manager.id.toString('hex')) {
@@ -52,7 +53,8 @@ export class EventController {
   }
 
   @Get('/:id/staff')
-  async findallstaff(@Param('id') eventId: string,@GetUser() user: IUser): Promise<IUser[]> {
+  @UseGuards(AuthGuard())
+  async findallstaff(@Param('id') eventId: string,@GetUser() user: IUser): Promise<IStaff[]> {
   const event = await this.eventService.findById(eventId);
     if (user.id !== event.event_manager.id) {
     return this.eventService.findallstaff(eventId);
@@ -65,7 +67,8 @@ export class EventController {
   }
 
   @Get('/:id/guests')
-  async findallguests(@Param('id') eventId: string,@GetUser() user: IUser): Promise<IUser[]> {
+  @UseGuards(AuthGuard())
+  async findallguests(@Param('id') eventId: string,@GetUser() user: IUser): Promise<IGuest[]> {
     const event = await this.eventService.findById(eventId);
     if (user.id !== event.event_manager.id) {
     return this.eventService.findallguests(eventId);
@@ -76,6 +79,7 @@ export class EventController {
   }
 
   @Patch('/:id')
+  @UseGuards(AuthGuard())
   async updateEvent(
     @Param('id') eventId: string,
     @Body() updateEventDto: UpdateEventDto,
@@ -85,6 +89,7 @@ export class EventController {
   }
 
   @Delete('/:eventId/guests/:userId')
+  @UseGuards(AuthGuard())
   async removeGuestFromEvent(
   @Param('eventId') eventId: string,
   @Param('userId') userId: string,
@@ -106,6 +111,7 @@ export class EventController {
   }
 
   @Delete('/:eventId/staff/:userId')
+  @UseGuards(AuthGuard())
   async removeStaffFromEvent(
     @Param('eventId') eventId: string,
     @Param('userId') userId: string,
@@ -129,6 +135,7 @@ export class EventController {
   // INivite methods 
   
   @Post('invite/guests/:id')
+  @UseGuards(AuthGuard())
   async inviteGuests(
       @Body('emails') emails: string | string[],
       @Param('id') id: string,
@@ -154,6 +161,7 @@ export class EventController {
   }
 
   @Post('invite/staff/:id')
+  @UseGuards(AuthGuard())
   async inviteStaff(
       @Body('emails') emails: string[],
       @Param('id') id: string,
@@ -177,4 +185,7 @@ export class EventController {
           return { message: 'Failed to send staff invitations', error };
       }
   }
+
+  //@Post(':eventid/guests/')
+
 }
