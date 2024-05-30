@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, Matches, MaxLength,MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Matches, MaxLength, MinLength, IsOptional } from 'class-validator';
 
 
 export class CreateUserDto {
@@ -17,22 +17,26 @@ export class CreateUserDto {
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
     readonly password: string;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    readonly age: number;
+    age: number;
 
+    @IsOptional()
     @IsString()
     photo: string;
 
+    @IsOptional()
     @IsString()
     institution :string;
 
+    @IsOptional()
     @IsString()
     profession :string;
 
-    @IsNumber()
+    @IsNotEmpty()
+    @IsString()
     @MinLength(8)
-    phonenumber : number ;
+    phonenumber : string ;
 
     
     

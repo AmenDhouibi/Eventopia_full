@@ -1,7 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from 'src/user/user.model';// Adjust the import path as necessary
 import { IEvent } from 'src/event/event.model'; // Adjust the import path as necessary
-import { IGuest } from 'src/guest/guest.model'; // Adjust the import path as necessary
 
 export interface IStaff extends Document {
     userId: IUser;

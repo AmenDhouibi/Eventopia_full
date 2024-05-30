@@ -15,7 +15,6 @@ import { IGuest } from 'src/guest/guest.model';
 @Controller('events')
 export class EventController {
   constructor(
-    private readonly userservice : UserService,
     private readonly eventService: EventService,
     private readonly MailingService : MailingService,
     ) {}
