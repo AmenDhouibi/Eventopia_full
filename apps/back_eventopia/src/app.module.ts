@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { FlightModule } from './flight/flight.module';
 import { UserModule } from './user/user.module';
 import { MailingModule } from './mailing/mailing.module';
+import { GuestModule } from './guest/guest.module';
+import { StaffModule } from './staff/staff.module';
 
 
 @Module({
@@ -17,6 +19,8 @@ import { MailingModule } from './mailing/mailing.module';
     FlightModule,
     UserModule,
     MailingModule,
+    GuestModule,
+    StaffModule,
   ],
   controllers: [AppController],
   providers: [AppService],

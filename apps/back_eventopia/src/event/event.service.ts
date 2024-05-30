@@ -6,6 +6,8 @@ import { IEvent } from './event.model';
 import { eventfilterdto } from './dto/event.filter.dto';
 import { UserService } from 'src/user/user.service';
 import { UpdateEventDto } from './dto/update.dto';
+import { IStaff } from 'src/staff/staff.model';
+import { IGuest } from 'src/guest/guest.model';
 
 @Injectable()
 export class EventService {
@@ -41,11 +43,11 @@ export class EventService {
     return this.eventRepository.create(createEventDto, eventManager);
   }
 
-  async findallguests(eventId: string): Promise<IUser[]> {
+  async findallguests(eventId: string): Promise<IGuest[]> {
     return this.eventRepository.findallguests(eventId);
   }
 
-  async findallstaff(eventId: string): Promise<IUser[]> {
+  async findallstaff(eventId: string): Promise<IStaff[]> {
     return this.eventRepository.findallstaff(eventId);
   }
 

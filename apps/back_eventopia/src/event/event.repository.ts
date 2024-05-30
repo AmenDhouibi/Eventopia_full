@@ -7,6 +7,8 @@ import { IEvent } from './event.model';
 import { AuthGuard } from '@nestjs/passport';
 import { eventfilterdto } from './dto/event.filter.dto';
 import { IEventRole } from './eventrole.model';
+import { IStaff } from 'src/staff/staff.model';
+import { IGuest } from 'src/guest/guest.model';
 
 
 @Injectable()
@@ -110,7 +112,7 @@ export class EventRepository {
     }
   }
 
-  async  findallstaff(eventId: string): Promise<IUser[]> {
+  async  findallstaff(eventId: string): Promise<IStaff[]> {
     const event = await this.eventModel.findOne({ _id: eventId }).exec();
     if (!event) {
       throw new NotFoundException(`Event with ID ${eventId} not found`);
@@ -118,7 +120,7 @@ export class EventRepository {
     return event.staff;
   }
 
-  async findallguests(eventId: string): Promise<IUser[]> {
+  async findallguests(eventId: string): Promise<IGuest[]> {
     const event = await this.eventModel.findOne({ _id: eventId }).exec();
     if (!event) {
       throw new NotFoundException(`Event with ID ${eventId} not found`);

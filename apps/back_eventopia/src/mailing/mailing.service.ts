@@ -13,7 +13,7 @@ export class MailingService {
       port: 587,
       secure: process.env.SMTP_SECURE === 'true',
       auth: {
-        user: 'apikey', // SendGrid uses 'apikey' as the username
+        user: 'apikey',
         pass: process.env.SENDGRID_API_KEY,
       },
     });
