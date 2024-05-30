@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@nestjs/config": "^3.2.2",
-    "@nestjs/platform-express": "^10.3.8"
+    "@nestjs/platform-express": "^10.3.8",
+    "react-icons": "^5.2.1"
   }
 }

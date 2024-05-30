@@ -6,6 +6,7 @@ import { EventModule } from './event/event.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FlightModule } from './flight/flight.module';
 import { UserModule } from './user/user.module';
+import { MailingModule } from './mailing/mailing.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module';
     EventModule,
     FlightModule,
     UserModule,
+    MailingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
