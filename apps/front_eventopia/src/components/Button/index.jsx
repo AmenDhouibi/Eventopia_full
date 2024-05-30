@@ -33,7 +33,7 @@ const Button = ({
   shape,
   variant = "outline",
   size = "md",
-  color = "yellow_400",
+  color = "yellow_400_7f",
   ...restProps
 }) => {
   return (
@@ -56,7 +56,7 @@ Button.propTypes = {
   shape: PropTypes.oneOf(["round", "square"]),
   size: PropTypes.oneOf(["xs", "lg", "sm", "md"]),
   variant: PropTypes.oneOf(["fill", "outline"]),
-  color: PropTypes.oneOf(["red_400", "blue_gray_100_7f", "yellow_400", "blue_gray_900", "white_A700_7f", "yellow_400_7f"]),
+  color: PropTypes.oneOf(["yellow_400_7f", "red_400", "blue_gray_100_7f", "yellow_400", "blue_gray_900", "white_A700_7f"]),
 };
 
 export { Button };

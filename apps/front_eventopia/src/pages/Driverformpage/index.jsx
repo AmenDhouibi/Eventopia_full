@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Img, Button, Input, Text, Heading } from "../../components";
 
-export default function GuestformpagePage() {
+export default function DriverformpagePage() {
   const [formData, setFormData] = useState({
-    flight_id: "",
-    phone_number: "",
-    luggage_details: "",
+    trunk_space: "",
+    available_places: "",
   });
 
   const handleChange = (e) => {
@@ -29,9 +28,8 @@ export default function GuestformpagePage() {
       if (response.ok) {
         alert("Form submitted successfully!");
         setFormData({
-          flight_id: "",
-          phone_number: "",
-          luggage_details: "",
+            trunk_space: "",
+            available_places: "",
         });
       } else {
         alert("Failed to submit the form. Please try again.");
@@ -61,43 +59,31 @@ export default function GuestformpagePage() {
           className="h-[45px] w-[5%] sm:w-full"
         />
       </header>
-      <div className="absolute bottom-[20%] left-[35%] m-auto h-[660px] w-[40%]">
+      <div className="absolute bottom-[25%] left-[35%] m-auto h-[660px] w-[40%]">
         <form onSubmit={handleSubmit} className="absolute bottom-0 right-0 m-auto flex flex-col items-center rounded-[20px] bg-blue_gray-100_7f p-[80px] shadow-xs sm:p-3 w-full">
           <Heading size="xs" className="text-center uppercase">
             Welcome to our event! Please fill this form
           </Heading>
           <div className="mt-[5px] flex flex-col items-start w-full">
             <Text size="xs" as="p" className="ml-[3px] text-center">
-              flight id
+            Number of available places
             </Text>
             <Input
               shape="round"
-              name="flight_id"
-              value={formData.flight_id}
+              name="available_places"
+              value={formData.available_places}
               onChange={handleChange}
               className="flex gap-[5px] self-stretch rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs sm:py-3 sm:pl-3 w-full"
             />
           </div>
           <div className="mt-[5px] flex flex-col items-start gap-[3px] w-full">
             <Text size="xs" as="p" className="ml-[3px] text-center">
-              phone number
+              Available trunk space
             </Text>
             <Input
               shape="round"
-              name="phone_number"
-              value={formData.phone_number}
-              onChange={handleChange}
-              className="flex gap-[5px] self-stretch rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs sm:py-3 sm:pl-3 w-full"
-            />
-          </div>
-          <div className="mt-[5px] flex flex-col items-start w-full">
-            <Text size="xs" as="p" className="ml-2 text-center">
-              luggage details
-            </Text>
-            <Input
-              shape="round"
-              name="luggage_details"
-              value={formData.luggage_details}
+              name="trunk_space"
+              value={formData.trunk_space}
               onChange={handleChange}
               className="flex gap-[5px] self-stretch rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs sm:py-3 sm:pl-3 w-full"
             />
