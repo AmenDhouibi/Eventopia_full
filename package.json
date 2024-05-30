@@ -17,5 +17,9 @@
   ],
   "devDependencies": {
     "turbo": "^1.13.3"
+  },
+  "dependencies": {
+    "@nestjs/config": "^3.2.2",
+    "@nestjs/platform-express": "^10.3.8"
   }
 }
