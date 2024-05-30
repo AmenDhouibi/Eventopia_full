@@ -9,6 +9,7 @@ import GuestformpagePage from "pages/Guestformpage";
 import GuestslistpagePage from "pages/Guestslistpage";
 import DriverslistpagePage from "pages/Driverslistpage";
 import DriverformpagePage from "pages/Driverformpage";
+import ProfilepagePage from "pages/Profilepage";
 
 const ProjectRoutes = () => {
   let element = useRoutes([
@@ -42,6 +43,10 @@ const ProjectRoutes = () => {
     {
       path: "driverformpage",
       element: <DriverformpagePage />,
+    },
+    {
+      path: "profilepage",
+      element: <ProfilepagePage />,
     },
   ]);
 
