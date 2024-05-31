@@ -5,6 +5,12 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly UserService: UserService) {}
 
+    
+    @Get('/:username')
+    async getUserByUsername(@Param('username') username: string) {
+        const user = await this.UserService.getUserbyusername(username);
+        return user;
+    }
 
     @Get('/:email')
     async getUser(@Param('email') email: string) {

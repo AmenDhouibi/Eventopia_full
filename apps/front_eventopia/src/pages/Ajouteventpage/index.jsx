@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Button, Input, Img } from "../../components";
+import { jwtDecode } from 'jwt-decode'; // Import jwtDecode as a named export
 import axios from "axios";
 
 export default function AjouteventpagePage() {
@@ -18,18 +19,79 @@ export default function AjouteventpagePage() {
     organizingClub: "",
   });
 
+  const accessToken = localStorage.getItem('accessToken');
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { id, value } = e.target;
+    if (id === 'guests' || id === 'staff' || id === 'sponsors') {
+      setFormData({ ...formData, [id]: value.split(',') });
+    } else {
+      setFormData({ ...formData, [id]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/api/events", formData);
+      const username = formData.event_manager;
+      const response_id = await axios.get(`http://localhost:3000/api/user/${username}`);
+      const manageruser = response_id.data;
+      const event_manager = manageruser._id;
+      let decodedToken;
+      try {
+        decodedToken = jwtDecode(accessToken);
+        console.log('Decoded Token:', decodedToken);
+      } catch (err) {
+        console.error('Error decoding token:', err);
+        throw new Error('Failed to decode token');
+      }
+      const { user_id } = decodedToken;
+      if (user_id !== manageruser._id) {
+        alert("You cannot create an event if you are not its manager");
+        return;
+      }
+
+      // Fetch guests, staff, and sponsors
+      const guests = await Promise.all(formData.guests.map(async (guest) => {
+        const response = await axios.get(`http://localhost:3000/api/user/${guest}`);
+        return response.data;
+      }));
+
+      const staff = await Promise.all(formData.staff.map(async (staffMember) => {
+        const response = await axios.get(`http://localhost:3000/api/user/${staffMember}`);
+        return response.data;
+      }));
+
+     /* const sponsors = await Promise.all(formData.sponsors.map(async (sponsor) => {
+        const response = await axios.get(`http://localhost:3000/api/user/${sponsor}`);
+        return response.data;
+     }));
+     */
+      const createEventDto = {
+        name: formData.eventname,
+        time: formData.time,
+        description: formData.description,
+        guests: guests,
+        staff: staff,
+        event_manager: event_manager,
+        poster: formData.poster,
+        numberOfAttendees: parseInt(formData.numberOfAttendees),
+        //sponsors: sponsors,
+        organizingClub: formData.organizingClub,
+        place: formData.place,
+      };
+
+      const response = await axios.post("http://localhost:3000/api/events", createEventDto, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
       console.log(response.data);
+      alert("Event Added !");
     } catch (error) {
       console.error(error);
+      alert("Problem in adding the event");
     }
   };
 
