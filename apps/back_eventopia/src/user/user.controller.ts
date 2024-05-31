@@ -12,6 +12,12 @@ export class UserController {
         return user;
   }
 
+  @Get('/id/:id')
+    async getUserById(@Param('id') id: string) {
+        const user = await this.UserService.getUserById(id);
+        return user;
+    }
+
   @Delete('delete')
   async deleteUser(@Body('email') email: string): Promise<boolean> {
       const response = await this.UserService.deleteUser(email);

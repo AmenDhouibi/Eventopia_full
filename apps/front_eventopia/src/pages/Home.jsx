@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { Text, Button, Img, Heading } from "../components";
 import SignInPopup from "../components/SignInPopup";
 import SignUpPopup from "../components/SignUpPopup";
@@ -7,6 +8,47 @@ import SignUpPopup from "../components/SignUpPopup";
 const Home = () => {
   const [isSignInOpen, setSignInOpen] = useState(false);
   const [isSignUpOpen, setSignUpOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/events")
+      .then(async (response) => {
+        const eventsData = response.data;
+        const eventsWithDetails = await Promise.all(
+          eventsData.map(async (event) => {
+            try {
+              const managerResponse = await axios.get(
+                `http://localhost:3000/api/user/id/${event.event_manager}`
+              );
+              event.managerName = managerResponse.data.username;
+              return event;
+            } catch (error) {
+              console.error("Error fetching user details:", error);
+              return event;
+            }
+          })
+        );
+        setEvents(eventsWithDetails);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the events!", error);
+      });
+  }, []);
+
+  const handleLoginStatus = (status) => {
+    setIsLoggedIn(status);
+  };
+
+  const handlelogin = () => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  };
 
   const openSignInPopup = () => {
     setSignInOpen(true);
@@ -25,6 +67,7 @@ const Home = () => {
   const closeSignUpPopup = () => {
     setSignUpOpen(false);
   };
+
   return (
     <>
       <div className="mb-24 flex flex-col items-center">
@@ -44,25 +87,25 @@ const Home = () => {
             </Text>
           </div>
           <div className="flex w-[25%] items-center justify-center md:w-full sm:flex-col">
-          <Button
-            size="xs"
-            shape="square"
-            className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
-            onClick={openSignInPopup}
-          >
-            sign in
-          </Button>
-          <SignInPopup isOpen={isSignInOpen} onClose={closeSignInPopup} />
-            
-          <Button
-            size="xs"
-            shape="square"
-            className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
-            onClick={openSignUpPopup}
-          >
-            sign up
-          </Button>
-          <SignUpPopup isOpen={isSignUpOpen} onClose={closeSignUpPopup} />
+            <Button
+              size="xs"
+              shape="square"
+              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+              onClick={openSignInPopup}
+            >
+              sign in
+            </Button>
+            <SignInPopup isOpen={isSignInOpen} onClose={closeSignInPopup} updateLoginStatus={handleLoginStatus} />
+
+            <Button
+              size="xs"
+              shape="square"
+              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+              onClick={openSignUpPopup}
+            >
+              sign up
+            </Button>
+            <SignUpPopup isOpen={isSignUpOpen} onClose={closeSignUpPopup} />
             <Img
               src="images/img_frame_blue_gray_900.svg"
               alt="image_one"
@@ -89,72 +132,32 @@ const Home = () => {
         <div className="mx-auto mt-[10px] flex w-full max-w-[1000px] items-start justify-between gap-0 md:flex-col md:p-5">
           <div className="relative h-[350px] w-[54%] md:w-full">
             <div className="absolute bottom-[0.00px] left-0 right-0 m-auto flex w-[97%] rounded-[30px] bg-blue_gray-100_7f p-4 shadow-xs">
-              <div className="mb-3.5 mt-7 flex w-[77%] items-center gap-[25px] md:w-full sm:flex-col">
-                <div className="flex w-[18%] flex-col items-center gap-[60px] sm:w-full">
-                  <Text
-                    size="sm"
-                    as="p"
-                    className="w-[93%] text-center md:w-full"
-                  >
-                    <>
-                      April <br />
-                      5
-                    </>
-                  </Text>
-                  <Text
-                    size="sm"
-                    as="p"
-                    className="w-[93%] text-center md:w-full"
-                  >
-                    <>
-                      April <br />
-                      20
-                    </>
-                  </Text>
-                  <Text
-                    size="sm"
-                    as="p"
-                    className="w-[93%] text-center md:w-full"
-                  >
-                    <>
-                      May <br />
-                      3
-                    </>
-                  </Text>
+              {events.length > 0 ? (
+                <div className="mb-3.5 mt-7 flex w-full flex-wrap items-center gap-4 md:w-full sm:flex-col">
+                  {events.map((event) => (
+                    <Text
+                      key={event._id}
+                      size="sm"
+                      as="p"
+                      className="w-auto text-center md:w-full"
+                    >
+                      Event name: {event.name} /
+                      Event manager: {event.managerName} /
+                      Event guests: {event.guests?.join(", ")} /
+                      Event sponsors: {event.sponsors?.join(", ")} /
+                      Event staff: {event.staff?.join(", ")}
+                    </Text>
+                  ))}
                 </div>
-                <div className="flex flex-2 flex-col sm:self-stretch">
-                  <Img
-                    src="images/img_line_1.svg"
-                    alt="lineone_one"
-                    className="h-[10px] w-[44%]"
-                  />
-                  <Img
-                    src="images/img_line_1.svg"
-                    alt="linefour_one"
-                    className="mt-6 h-[10px]"
-                  />
-                  <Img
-                    src="images/img_line_1.svg"
-                    alt="linetwo_one"
-                    className="mt-12 h-[10px] w-[44%]"
-                  />
-                  <Img
-                    src="images/img_line_1.svg"
-                    alt="linefour_one"
-                    className="mt-6 h-[10px]"
-                  />
-                  <Img
-                    src="images/img_line_1.svg"
-                    alt="linethree_one"
-                    className="mt-[66px] h-[10px] w-[44%]"
-                  />
-                  <Img
-                    src="images/img_line_1.svg"
-                    alt="linesix_one"
-                    className="mt-[31px] h-[10px]"
-                  />
-                </div>
-              </div>
+              ) : (
+                <Text
+                  size="sm"
+                  as="p"
+                  className="w-full text-center md:w-full"
+                >
+                  No events available.
+                </Text>
+              )}
             </div>
             <Button
               color="red_400"
@@ -167,10 +170,28 @@ const Home = () => {
             </Button>
           </div>
           <div className="mt-[30px] flex w-[35%] flex-col items-left md:w-full">
-            <Link
-              to="/ajouteventpage"
-              style={{ color: "#87CEFA", textDecoration: "none" }}
-            >
+            {isLoggedIn ? (
+              <Link
+                to="/ajouteventpage"
+                style={{ color: "#87CEFA", textDecoration: "none" }}
+              >
+                <Button
+                  color="blue_gray_100_7f"
+                  size="md"
+                  variant="fill"
+                  rightIcon={
+                    <Img
+                      src="images/img_arrowleft.svg"
+                      alt="arrow_left"
+                      className="h-[20px] w-[20px]"
+                    />
+                  }
+                  className=" flex w-[130%] gap-[35px] rounded-[30px] font-regular sm:px-5"
+                >
+                  Create an event{" "}
+                </Button>
+              </Link>
+            ) : (
               <Button
                 color="blue_gray_100_7f"
                 size="md"
@@ -183,10 +204,11 @@ const Home = () => {
                   />
                 }
                 className=" flex w-[130%] gap-[35px] rounded-[30px] font-regular sm:px-5"
+                onClick={openSignInPopup}
               >
-                create an event{" "}
+                Sign in to create an event{" "}
               </Button>
-            </Link>
+            )}
             <>
               <br />
             </>
@@ -206,15 +228,31 @@ const Home = () => {
                   .<br />
                 </>
               </span>
+              <span className="text-blue_gray-900_b2">
+                Ready to dive into the excitement? Explore our upcoming events
+                now and be part of the journey.
+              </span>
             </Text>
-            <div style={{ marginLeft: "60px" }}>
-              <Text size="xs" as="p" className="flex text-center !text-blue_gray-900_a0">
-                <span className="font-medium text-blue_gray-900_a0">need help?&nbsp;</span>
-                <a href="#" className="font-medium text-yellow_400_c9 underline">
-                  contact us
-                </a>
-              </Text>
-            </div>
+            <Link
+              to="/exploreeventspage"
+              style={{ color: "#87CEFA", textDecoration: "none" }}
+            >
+              <Button
+                color="blue_gray_100_7f"
+                size="md"
+                variant="fill"
+                rightIcon={
+                  <Img
+                    src="images/img_arrowleft.svg"
+                    alt="arrow_left"
+                    className="h-[20px] w-[20px]"
+                  />
+                }
+                className="mt-[29px] flex w-[130%] gap-[35px] rounded-[30px] font-regular sm:px-5"
+              >
+                Explore our events{" "}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

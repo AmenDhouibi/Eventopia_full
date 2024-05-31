@@ -7,7 +7,6 @@ import { EventModel } from './event.model';
 import { EventRepository } from './event.repository';
 import { UserModule } from 'src/user/user.module';
 import { EventRoleModel } from './eventrole.model';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { MailingModule } from 'src/mailing/mailing.module';
 
 @Module({
