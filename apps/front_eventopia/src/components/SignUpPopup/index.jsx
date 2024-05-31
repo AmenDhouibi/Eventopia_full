@@ -28,6 +28,7 @@ const SignUpPopup = ({ isOpen, onClose }) => {
       setIsSuccess(true);
     } catch (error) {
       console.error(error);
+      alert('Problem signing Up,Please Verify Ur Credentials !!')
     }
   };
 
