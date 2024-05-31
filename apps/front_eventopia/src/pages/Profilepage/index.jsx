@@ -32,7 +32,7 @@ export default function ProfilepagePage() {
               className="absolute left-0 top-0 m-auto h-[45px] w-[45px]"
             />
             <Text size="lg" as="p" className="absolute bottom-[-0.51px] right-0.45 m-auto text-center lowercase">
-              eventopia
+            <a href="/">eventopia</a>
             </Text>
           </div>
           {/* user information section */}

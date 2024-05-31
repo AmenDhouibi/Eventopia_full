@@ -40,7 +40,7 @@ const Home = () => {
               as="p"
               className="absolute bottom-[-0.51px] right-[0.25px] m-auto text-center lowercase"
             >
-              eventopia
+              <a href="/">eventopia</a>
             </Text>
           </div>
           <div className="flex w-[25%] items-center justify-center md:w-full sm:flex-col">

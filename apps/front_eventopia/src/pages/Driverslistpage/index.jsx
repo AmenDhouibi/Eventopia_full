@@ -29,7 +29,7 @@ export default function DriverslistpagePage({ drivers }) {
             className="absolute left-0 top-0 m-auto h-[45px] w-[45px]"
           />
           <Text size="lg" as="p" className="absolute bottom-[-0.51px] right-0.25 m-auto text-center lowercase">
-            eventopia
+            <a href="/">eventopia</a>
           </Text>
         </div>
         <Img src="images/img_frame_blue_gray_900.svg" alt="image_one" className="h-[45px] w-[5%] sm:w-full" />
