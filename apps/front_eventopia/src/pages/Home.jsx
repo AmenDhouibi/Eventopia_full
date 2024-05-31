@@ -10,30 +10,32 @@ const Home = () => {
   const [isSignUpOpen, setSignUpOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [events, setEvents] = useState([]);
-  const [eventmanager, setEventManager] = useState("");
-
 
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/events")
-      .then((response) => {
-        setEvents(response.data);
-        if (response.data.length > 0) {
-          const manager = response.data[0].event_manager; // Assuming event manager is in the first event
-          axios.get(`http://localhost:3000/api/user/id/${manager}`)
-            .then((userDetailsResponse) => {
-              setEventManager(userDetailsResponse.data.username);
-            })
-            .catch((error) => {
+      .then(async (response) => {
+        const eventsData = response.data;
+        const eventsWithDetails = await Promise.all(
+          eventsData.map(async (event) => {
+            try {
+              const managerResponse = await axios.get(
+                `http://localhost:3000/api/user/id/${event.event_manager}`
+              );
+              event.managerName = managerResponse.data.username;
+              return event;
+            } catch (error) {
               console.error("Error fetching user details:", error);
-            });
-        }
+              return event;
+            }
+          })
+        );
+        setEvents(eventsWithDetails);
       })
       .catch((error) => {
         console.error("There was an error fetching the events!", error);
       });
   }, []);
-
 
   const handleLoginStatus = (status) => {
     setIsLoggedIn(status);
@@ -139,12 +141,11 @@ const Home = () => {
                       as="p"
                       className="w-auto text-center md:w-full"
                     >
-                      event name:{event.name}/
-
-                      event manager:{eventmanager}/
-
-                      event guest:{event.guests}                      
-
+                      Event name: {event.name} /
+                      Event manager: {event.managerName} /
+                      Event guests: {event.guests?.join(", ")} /
+                      Event sponsors: {event.sponsors?.join(", ")} /
+                      Event staff: {event.staff?.join(", ")}
                     </Text>
                   ))}
                 </div>
