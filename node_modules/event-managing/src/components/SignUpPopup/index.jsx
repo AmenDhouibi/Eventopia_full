@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Helmet } from 'react-helmet';
 
 const SignUpPopup = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState('');
@@ -35,15 +36,13 @@ const SignUpPopup = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-100">
-          <div className="bg-blue rounded-lg p-8 w-96 z-50">
-            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={onClose}>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-            <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
+      <Helmet>
+        <title>Sign In</title>
+      </Helmet>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <h2 className="text-2xl font-semibold mb-6 text-center">Sign In</h2>
+          
             {!isSuccess ? (
               <form className="space-y-4">
                 <div>
@@ -88,7 +87,6 @@ const SignUpPopup = ({ isOpen, onClose }) => {
             )}
           </div>
         </div>
-      )}
     </>
   );
 };

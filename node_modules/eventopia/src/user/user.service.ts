@@ -13,7 +13,7 @@ export class UserService {
 
     async getUserbyusername(username: string) {
         try {
-            const user = await this.UserRepository.Getuser(username);
+            const user = await this.UserRepository.getUserByUsername(username);
             return user;
         } catch (error) {
             console.error('Error getting user:', error);

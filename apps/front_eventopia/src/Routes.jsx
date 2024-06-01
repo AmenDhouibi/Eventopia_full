@@ -10,12 +10,23 @@ import GuestslistpagePage from "pages/Guestslistpage";
 import DriverslistpagePage from "pages/Driverslistpage";
 import DriverformpagePage from "pages/Driverformpage";
 import ProfilepagePage from "pages/Profilepage";
+import SignInPopup from "components/SignInPopup";
+import SignUpPopup from "components/SignUpPopup";
+import ExploreeventspagePage from "pages/Exploreeventspage";
 
 const ProjectRoutes = () => {
   let element = useRoutes([
     { path: "/", element: <Home /> },
     { path: "home", element: <Home /> },
     { path: "*", element: <NotFound /> },
+    {
+      path: "signin",
+      element: <SignInPopup />,
+    },
+    {
+      path: "signup",
+      element: <SignUpPopup />,
+    },
     {
       path: "ajouteventpage",
       element: <Ajouteventpage />,
@@ -47,6 +58,10 @@ const ProjectRoutes = () => {
     {
       path: "profilepage",
       element: <ProfilepagePage />,
+    },
+    {
+      path: "exploreeventspage",
+      element: <ExploreeventspagePage />,
     },
   ]);
 

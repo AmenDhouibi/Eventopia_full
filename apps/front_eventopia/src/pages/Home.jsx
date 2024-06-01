@@ -55,57 +55,44 @@ const Home = () => {
     setSignUpOpen(false); // Ensure sign-up popup is closed
   };
 
-  const closeSignInPopup = () => {
-    setSignInOpen(false);
-  };
-
   const openSignUpPopup = () => {
     setSignUpOpen(true);
     setSignInOpen(false); // Ensure sign-in popup is closed
-  };
-
-  const closeSignUpPopup = () => {
-    setSignUpOpen(false);
   };
 
   return (
     <>
       <div className="mb-24 flex flex-col items-center">
         <header className="flex items-center justify-between gap-5 self-stretch md:flex-col">
-          <div className="relative mb-[7px] h-[85px] w-[19%] md:w-full">
-            <Img
-              src="images/img_frame.svg"
-              alt="image"
-              className="absolute left-[0.00px] top-[0.00px] m-auto h-[75px] w-[75px]"
-            />
-            <Text
-              size="lg"
-              as="p"
-              className="absolute bottom-[-0.51px] right-[0.25px] m-auto text-center lowercase"
-            >
-              <a href="/">eventopia</a>
+        <div className="relative mb-[7px] h-[50px] w-[15%] sm:w-full">
+            <Img src="images/img_frame.svg" alt="image" className="absolute left-10 top-10 m-auto h-[45px] w-[45px]" />
+            <Text size="lg" as="p" className="absolute left-10 top-10 m-auto text-center lowercase">
+                <a href="/">eventopia</a>
             </Text>
-          </div>
+        </div>
           <div className="flex w-[25%] items-center justify-center md:w-full sm:flex-col">
-            <Button
-              size="xs"
-              shape="square"
-              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
-              onClick={openSignInPopup}
-            >
-              sign in
-            </Button>
-            <SignInPopup isOpen={isSignInOpen} onClose={closeSignInPopup} updateLoginStatus={handleLoginStatus} />
+            <Link to="/signin">
+              <Button
+                size="xs"
+                shape="square"
+                className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+                onClick={openSignInPopup}
+              >
+                sign in
+              </Button>
+            </Link>
 
-            <Button
-              size="xs"
-              shape="square"
-              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
-              onClick={openSignUpPopup}
-            >
-              sign up
-            </Button>
-            <SignUpPopup isOpen={isSignUpOpen} onClose={closeSignUpPopup} />
+            <Link to="/signup">
+              <Button
+                size="xs"
+                shape="square"
+                className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+                onClick={openSignUpPopup}
+              >
+                sign up
+              </Button>
+            </Link>
+            
             <Img
               src="images/img_frame_blue_gray_900.svg"
               alt="image_one"
@@ -130,31 +117,30 @@ const Home = () => {
           experience through vibrant, engaging, and unforgettable events
         </Text>
         <div className="mx-auto mt-[10px] flex w-full max-w-[1000px] items-start justify-between gap-0 md:flex-col md:p-5">
-          <div className="relative h-[350px] w-[54%] md:w-full">
-            <div className="absolute bottom-[0.00px] left-0 right-0 m-auto flex w-[97%] rounded-[30px] bg-blue_gray-100_7f p-4 shadow-xs">
+          <div className="relative max-h-[100px] w-[54%] md:w-full">
+          <div className="absolute top-[10px] left-0 right-0 m-auto flex w-[97%] rounded-[30px] bg-blue_gray-100_7f p-4 shadow-xs">
               {events.length > 0 ? (
                 <div className="mb-3.5 mt-7 flex w-full flex-wrap items-center gap-4 md:w-full sm:flex-col">
-                  {events.map((event) => (
-                    <Text
+                  {events.slice(0, 3).map((event) => (
+                    <div
                       key={event._id}
-                      size="sm"
-                      as="p"
-                      className="w-auto text-center md:w-full"
+                      className="w-full rounded-[20px] bg-white p-4 shadow-lg"
                     >
-                      Event name: {event.name} /
-                      Event manager: {event.managerName} /
-                      Event guests: {event.guests?.join(", ")} /
-                      Event sponsors: {event.sponsors?.join(", ")} /
-                      Event staff: {event.staff?.join(", ")}
-                    </Text>
+                      <Text size="sm" as="p" className="text-left md:w-full">
+                        <strong style={{ color: '#ed4c5c' }}>{event.name}</strong> hosted by{" "}
+                        <strong>{event.managerName}</strong>. <br />
+                        Join us for an exciting event where we'll explore {event.topic} 
+                        with distinguished guests including {event.guests?.join(", ")}. <br />
+                        Generously sponsored by: {event.sponsors?.join(", ")}. <br />
+                        Our dedicated team includes: {event.staff?.join(", ")}. <br />
+                        Be prepared for an immersive experience that will inspire, 
+                        entertain, and leave you with lasting memories!
+                      </Text>
+                    </div>
                   ))}
                 </div>
               ) : (
-                <Text
-                  size="sm"
-                  as="p"
-                  className="w-full text-center md:w-full"
-                >
+                <Text size="sm" as="p" className="w-full text-center md:w-full">
                   No events available.
                 </Text>
               )}
@@ -192,22 +178,23 @@ const Home = () => {
                 </Button>
               </Link>
             ) : (
-              <Button
-                color="blue_gray_100_7f"
-                size="md"
-                variant="fill"
-                rightIcon={
-                  <Img
-                    src="images/img_arrowleft.svg"
-                    alt="arrow_left"
-                    className="h-[20px] w-[20px]"
-                  />
-                }
-                className=" flex w-[130%] gap-[35px] rounded-[30px] font-regular sm:px-5"
-                onClick={openSignInPopup}
-              >
-                Sign in to create an event{" "}
-              </Button>
+              <Link to="/signin">
+                <Button
+                  color="blue_gray_100_7f"
+                  size="md"
+                  variant="fill"
+                  rightIcon={
+                    <Img
+                      src="images/img_arrowleft.svg"
+                      alt="arrow_left"
+                      className="h-[20px] w-[20px]"
+                    />
+                  }
+                  className=" flex w-[130%] gap-[35px] rounded-[30px] font-regular sm:px-5"
+                >
+                  Sign in to create an event{" "}
+                </Button>
+              </Link>
             )}
             <>
               <br />
