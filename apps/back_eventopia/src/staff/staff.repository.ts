@@ -16,13 +16,6 @@ export class StaffRepository {
         return newStaff.save();
     }
 
-    async addguests(staffId: string, guestId: string): Promise<boolean> {
-        const staff = await StaffModel.findById(staffId);
-        staff.guests.push(guestId);
-        await staff.save();
-        return true;
-    }
-
     async findbyid(id:string) :Promise<IStaff>{
         return StaffModel.findOne({ userId: id });
     }

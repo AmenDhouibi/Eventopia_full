@@ -9,6 +9,9 @@ import { eventfilterdto } from './dto/event.filter.dto';
 import { IEventRole } from './eventrole.model';
 import { IStaff } from 'src/staff/staff.model';
 import { IGuest } from 'src/guest/guest.model';
+import { GuestRepository } from '../guest/guest.repository';
+import { StaffRepository } from '../staff/staff.repository';
+import { AvailabilityStatus } from '../guest/guest.model';
 
 
 @Injectable()
@@ -18,6 +21,8 @@ export class EventRepository {
   constructor(
     @InjectModel('Event') private readonly eventModel: Model<IEvent>,
     @InjectModel('EventRole') private readonly eventRoleModel: Model<IEventRole>,
+    @InjectModel('Guest') private readonly guestModel: Model<IGuest>,
+    @InjectModel('Staff') private readonly staffModel: Model<IStaff>,
     ) {}
 
   async findAll(): Promise<IEvent[]> {
@@ -154,8 +159,55 @@ export class EventRepository {
     await event.save();
   }
 
-  private async createEventRole(eventId: string, userId: string, role: string): Promise<IEventRole> {
+  async addguest(eventId: string, guestId: IGuest): Promise<boolean> {
+    const event = await this.eventModel.findById(eventId);
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+    event.guests.push(guestId);
+    await event.save();
+    return true;
+  }
+
+  async addstaff(eventId: string, staffId: IStaff): Promise<boolean> {
+    const event = await this.eventModel.findById(eventId);
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+    event.staff.push(staffId);
+    await event.save();
+    return true;
+  }
+
+  async createEventRole(eventId: string, userId: string, role: string): Promise<IEventRole> {
     const eventRole = new this.eventRoleModel({ event: eventId, user: userId, role });
     return await eventRole.save();
+  }
+
+  async assignDriverToGuest(eventId: string, guestId: string, driverId: string): Promise<boolean> {
+    const event = await this.eventModel.findById(eventId);
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+    const driver = event.staff.find(staff => staff.toString() === driverId);
+    if (!driver) {
+      throw new NotFoundException(`User with ID ${driverId} is not a staff of the event`);
+    }
+    const guest = event.guests.find(guest => guest.toString() === guestId);
+    if (!guest) {
+      throw new NotFoundException(`User with ID ${guestId} is not a guest of the event`);
+    }
+    await this.updateGuestWithDriver(guestId, driverId);
+    await this.updateDriverWithGuest(driverId, guestId);
+
+    return true;
+  }
+
+  private async updateGuestWithDriver(guestId: string, driverId: string): Promise<void> {
+    await this.guestModel.findByIdAndUpdate(guestId, { driver: driverId } , {AvailabilityStatus : AvailabilityStatus.LINKED_UP});
+  }
+
+  private async updateDriverWithGuest(driverId: string, guestId: string): Promise<void> {
+    await this.staffModel.findByIdAndUpdate(driverId, { $push: { guests: guestId } });
   }
 }

@@ -1,10 +1,10 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { GuestService } from './guest.service';
 import { GetUser } from 'src/user/get-user.decorator';
 import { IUser } from 'src/user/user.model';
 import { CreateGuestDto } from 'src/guest/dto/guest.dto';
 import { IGuest } from './guest.model';
-import { EventRepository } from '../event/event.repository';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('guest')
 export class GuestController {
@@ -12,13 +12,16 @@ export class GuestController {
     constructor(
         private readonly guestService: GuestService,
     ) {}
-    
-    @Post()
+
+    @UseGuards(AuthGuard())
+    @UsePipes(ValidationPipe)
+    @Post(':id')
     async create(
-        @Param('id') eventid:string,
+        @Param('id') eventId: string,
         @GetUser() user: IUser,
-        @Body() CreateGuestDto :CreateGuestDto,)
-        : Promise<IGuest> {
-        return this.guestService.createGuest(user.username,eventid,CreateGuestDto.flightId, CreateGuestDto.luggage);
+        @Body() createGuestDto: CreateGuestDto,
+    ): Promise<IGuest> {
+        const guest =await this.guestService.createGuest(user._id, eventId, createGuestDto.flightId, createGuestDto.luggage);
+        return guest;
     }
 }

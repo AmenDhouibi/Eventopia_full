@@ -68,4 +68,14 @@ export class EventService {
     // Call the corresponding method from the repository
     await this.eventRepository.removeStaff(eventId, userId);
   }
+
+  async addguest(eventId: string, guestId: IGuest): Promise<boolean> {
+    return this.eventRepository.addguest(eventId, guestId);
+  }
+  async addstaff(eventId: string, staffId: IStaff): Promise<boolean> {
+    return this.eventRepository.addstaff(eventId, staffId);
+  }
+  async assignDriverToGuest(eventId: string, guestId: string, driverId: string): Promise<boolean> {
+    return this.eventRepository.assignDriverToGuest(eventId, guestId, driverId);
+}
 }

@@ -12,9 +12,6 @@ export class StaffService {
         return this.StaffRepository.createStaff(userId, eventId, trunk_space, places);
     }
 
-    async addguests(staffId: string, guestId: string): Promise<boolean> {
-        return this.StaffRepository.addguests(staffId, guestId);
-    }
     async findbyid(id:string) : Promise<IStaff> {
         return this.StaffRepository.findbyid(id);
     }

@@ -173,7 +173,7 @@ export class EventController {
           }
 
           // Construct invite link
-          const inviteLink = `http://localhost:5000/${id}/invitestaff`;
+          const inviteLink = `http://localhost:5000/event/${id}/invitestaff`;
 
           // Send invitation email
           await this.MailingService.sendInvitationEmail(emails, event.name, inviteLink);
@@ -185,6 +185,25 @@ export class EventController {
       }
   }
 
-  //@Post(':eventid/guests/')
+
+  @Post('guests/:id/assigndriver')
+  @UseGuards(AuthGuard())
+  async AssignDriverToGuest(
+    @Param('id') id: string,
+    @GetUser() user : IUser,
+    @Body() guest : IGuest,
+    @Body() driver : IStaff,
+  ) {
+    const event = await this.eventService.findById(id);
+    if (!event){
+      const event = await this.eventService.findById(id);
+      if (!event){
+        throw new NotFoundException('Event not found');
+      }
+      const updatedGuest = await this.eventService.assignDriverToGuest(event.id, guest.id, driver.id);
+
+      return updatedGuest;
+    }
+  }
 
 }
