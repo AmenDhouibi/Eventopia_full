@@ -45,7 +45,7 @@ const Input = React.forwardRef(
         >
           {!!label && label}
           {!!prefix && prefix}
-          <input ref={ref} type={type} name={name} onChange={handleChange} placeholder={placeholder} {...restProps} />
+          <input ref={ref} type={type} name={name} onChange={(e) => onChange(e)} placeholder={placeholder} {...restProps} />
           {!!suffix && suffix}
         </div>
       </>
