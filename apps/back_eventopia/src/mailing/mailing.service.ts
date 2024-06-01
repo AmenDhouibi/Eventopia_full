@@ -50,11 +50,15 @@ async sendWelcomeEmail(to: string) {
     }
 }
 
-async sendInvitationEmail(to: string | string[], eventName: string, inviteLink: string) {
+async sendInvitationEmail(to: string | string[], eventName: string, inviteLink: string, emailContent: string) {
+  
+  console.log('Recipient(s) received:', to);
+  // Use the provided email content instead of the default text
   const subject = `You're invited to ${eventName}!`;
-  const text = `Please fill out this form to join the event: ${inviteLink}`;
-  const html = `<p>Please fill out <a href="${inviteLink}">this form</a> to join the event.</p>`;
+  const text = emailContent;
+  const html = `<p>${emailContent}</p>`;
 
+  // Send the email using the provided content
   try {
       // Ensure `to` is a valid array of email addresses
       let recipients: string[];
@@ -77,4 +81,5 @@ async sendInvitationEmail(to: string | string[], eventName: string, inviteLink: 
 }
 
 }
+
 
