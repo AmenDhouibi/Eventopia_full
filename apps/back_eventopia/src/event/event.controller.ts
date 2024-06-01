@@ -133,31 +133,36 @@ export class EventController {
 
   // INivite methods 
   
-  @Post('invite/guests/:id')
-  @UseGuards(AuthGuard())
-  async inviteGuests(
-      @Body('emails') emails: string | string[],
-      @Param('id') id: string,
-  ) {
-      try {
-          // Fetch event details
-          const event = await this.eventService.findById(id);
-          if (!event) {
-              throw new NotFoundException('Event not found');
-          }
+@Post('invite/guests/:id')
+@UseGuards(AuthGuard())
+async inviteGuests(
+    @Body('emailContent') emailContent: string,
+    @Body('selectedEmails') selectedEmails: string[],
+    @Param('id') id: string,
+) {
+    console.log('Request payload received:', { emailContent, selectedEmails, id });
+    try {
+        // Fetch event details
+        const event = await this.eventService.findById(id);
+        if (!event) {
+            throw new NotFoundException('Event not found');
+        }
+        if(!event.name){
+            throw new NotFoundException('Event Name not found')
+        }
+        const eventname=event.name
+        const inviteLink = `http://localhost:5000/${id}/invitestaff`;
 
-          // Construct invite link
-          const inviteLink = `http://localhost:5000/${id}/inviteguests`;
+        // Send invitation email
+        await this.MailingService.sendInvitationEmail(selectedEmails, eventname, inviteLink, emailContent);
 
-          // Send invitation email
-          await this.MailingService.sendInvitationEmail(emails, event.name, inviteLink);
+        return { message: 'Guest invitations sent successfully' };
+    } catch (error) {
+        console.error('Error sending guest invitations:', error);
+        return { message: 'Failed to send guest invitations', error };
+    }
+}
 
-          return { message: 'Guest invitations sent successfully' };
-      } catch (error) {
-          console.error('Error sending guest invitations:', error);
-          return { message: 'Failed to send guest invitations', error };
-      }
-  }
 
   @Post('invite/staff/:id')
   @UseGuards(AuthGuard())
@@ -174,9 +179,9 @@ export class EventController {
 
           // Construct invite link
           const inviteLink = `http://localhost:5000/${id}/invitestaff`;
-
+          const emailContent = ''; // Define your email content here
           // Send invitation email
-          await this.MailingService.sendInvitationEmail(emails, event.name, inviteLink);
+          await this.MailingService.sendInvitationEmail(emails, event.name, inviteLink, emailContent);
 
           return { message: 'Staff invitations sent successfully' };
       } catch (error) {

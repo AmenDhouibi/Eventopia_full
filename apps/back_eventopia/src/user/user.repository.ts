@@ -9,6 +9,11 @@ export class UserRepository {
         const user = await UserModel.findOne({ _id: id});
         return user;
     }
+    
+    async getUserByUsername(username: string): Promise<IUser> {
+      const user = await UserModel.findOne({ username });
+      return user;
+  }
 
     async deleteUser(email: string): Promise<boolean> {
         try {
