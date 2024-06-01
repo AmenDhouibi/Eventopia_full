@@ -52,11 +52,7 @@ export default function ProfilepagePage() {
 
   const handleSignOut = async () => {
     try {
-      await axios.post('http://localhost:3000/api/sign-out', {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
+      alert("signing out !")
       console.log("Signed out");
       localStorage.removeItem("accessToken");
       window.location.href = "/";
