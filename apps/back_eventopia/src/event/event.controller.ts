@@ -11,6 +11,7 @@ import { UpdateEventDto } from './dto/update.dto';
 import { MailingService } from '../mailing/mailing.service';
 import { IStaff } from 'src/staff/staff.model';
 import { IGuest } from 'src/guest/guest.model';
+import { eventNames } from 'process';
 
 @Controller('events')
 export class EventController {

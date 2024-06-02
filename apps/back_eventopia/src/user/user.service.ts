@@ -12,8 +12,8 @@ export class UserService {
         if (!user) {
           throw new NotFoundException(`User with ID ${userId} not found`);
         }
-    
         user.events.push(eventId);
+        user.ownedEvents.push(eventId);
         await user.save();
       }
 
