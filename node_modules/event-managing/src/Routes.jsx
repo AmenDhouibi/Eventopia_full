@@ -40,7 +40,7 @@ const ProjectRoutes = () => {
       element: <SendmaildriverpagePage />,
     },
     {
-      path: "guestformpage",
+      path: "guestformpage/:eventId",
       element: <GuestformpagePage />,
     },
     {
@@ -52,7 +52,7 @@ const ProjectRoutes = () => {
       element: <DriverslistpagePage />,
     },
     {
-      path: "driverformpage",
+      path: "driverformpage/:eventId",
       element: <DriverformpagePage />,
     },
     {

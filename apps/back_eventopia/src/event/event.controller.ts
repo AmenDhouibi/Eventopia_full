@@ -152,7 +152,7 @@ async inviteGuests(
             throw new NotFoundException('Event Name not found')
         }
         const eventname=event.name
-        const inviteLink = `http://localhost:5000/${id}/invitestaff`;
+        const inviteLink = `http://localhost:5000/guestformpage/${id}`;
 
         // Send invitation email
         await this.MailingService.sendInvitationEmail(selectedEmails, eventname, inviteLink, emailContent);
