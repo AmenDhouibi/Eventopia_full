@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import { Img, Button, Input, Text, Heading } from "../../components";
 
 export default function GuestformpagePage() {
+  const { eventId } = useParams(); // Get the eventId from the route
   const [formData, setFormData] = useState({
     flight_id: "",
     phone_number: "",
@@ -18,15 +21,26 @@ export default function GuestformpagePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('accessToken');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const guestData = {
+      flightId: formData.flight_id,
+      phoneNumber: formData.phone_number,
+      luggage: formData.luggage_details,
+      eventId,
+      user, // Include the whole user object
+    };
+
     try {
-      const response = await fetch("YOUR_API_ENDPOINT", {
-        method: "POST",
+      const response = await axios.post('http://localhost:3000/api/guest', guestData, {
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Pass the token for authentication
         },
-        body: JSON.stringify(formData),
       });
-      if (response.ok) {
+
+      if (response.status === 201) {
         alert("Form submitted successfully!");
         setFormData({
           flight_id: "",

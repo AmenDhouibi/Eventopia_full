@@ -44,11 +44,11 @@ const ProjectRoutes = () => {
       element: <GuestformpagePage />,
     },
     {
-      path: "guestslistpage",
+      path: "guestslistpage/:eventId",
       element: <GuestslistpagePage />,
     },
     {
-      path: "driverslistpage",
+      path: "driverslistpage/:eventId",
       element: <DriverslistpagePage />,
     },
     {
