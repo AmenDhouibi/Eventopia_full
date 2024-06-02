@@ -3,14 +3,14 @@ import axios from 'axios';
 import { Helmet } from 'react-helmet';
 
 const SignUpPopup = ({ isOpen, onClose }) => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [age, setAge] = useState('');
-  const [photo, setPhoto] = useState('');
-  const [institution, setInstitution] = useState('');
-  const [profession, setProfession] = useState('');
-  const [phonenumber, setPhoneNumber] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [age, setAge] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [institution, setInstitution] = useState("");
+  const [profession, setProfession] = useState("");
+  const [phonenumber, setPhoneNumber] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSignUp = async () => {
@@ -19,14 +19,16 @@ const SignUpPopup = ({ isOpen, onClose }) => {
         username,
         email,
         password,
-        age: parseInt(age),
+        age,
         photo,
         institution,
         profession,
-        phonenumber: parseInt(phonenumber),
+        phonenumber,
       });
       console.log(response.data);
-      setIsSuccess(true);
+      alert("Signed up !!")
+      isSuccess=true
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
       alert('Problem signing Up,Please Verify Ur Credentials !!')
@@ -37,11 +39,11 @@ const SignUpPopup = ({ isOpen, onClose }) => {
   return (
     <>
       <Helmet>
-        <title>Sign In</title>
+        <title>Sign Up</title>
       </Helmet>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Sign In</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center">Sign Up</h2>
           
             {!isSuccess ? (
               <form className="space-y-4">
@@ -51,7 +53,7 @@ const SignUpPopup = ({ isOpen, onClose }) => {
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                  <input type="email" id="email" name="email" className="mt-1 p-3 block w-full border border-gray-300 rounded-md" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <input type="text" id="email" name="email" className="mt-1 p-3 block w-full border border-gray-300 rounded-md" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>

@@ -12,6 +12,13 @@ const Home = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+      console.log(token)
+    } else {
+      setIsLoggedIn(false);
+    }
     axios
       .get("http://localhost:3000/api/events")
       .then(async (response) => {

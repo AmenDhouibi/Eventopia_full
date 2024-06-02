@@ -40,7 +40,9 @@ export class EventService {
   }
 
   async create(createEventDto: CreateEventDto, eventManager: IUser): Promise<IEvent> {
-    return this.eventRepository.create(createEventDto, eventManager);
+    const event = await this.eventRepository.create(createEventDto, eventManager);
+    await this.userService.addEventToUser(eventManager._id, event._id);
+    return event;
   }
 
   async findallguests(eventId: string): Promise<IGuest[]> {

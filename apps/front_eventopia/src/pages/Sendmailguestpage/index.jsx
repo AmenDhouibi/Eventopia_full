@@ -42,7 +42,8 @@ Event_manager`;
 
   const handleSendEmails = async () => {
     try {
-        const id="6628e02197d885369a5bdc8b"
+        const user=localStorage.getItem('user')
+        const id=user.event[0]._id
         const token = localStorage.getItem("accessToken")
         console.log("token")
         console.log(selectedEmails)

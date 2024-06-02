@@ -18,6 +18,7 @@ export class EventRepository {
   constructor(
     @InjectModel('Event') private readonly eventModel: Model<IEvent>,
     @InjectModel('EventRole') private readonly eventRoleModel: Model<IEventRole>,
+    
     ) {}
 
   async findAll(): Promise<IEvent[]> {

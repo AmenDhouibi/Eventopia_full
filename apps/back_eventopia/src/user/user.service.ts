@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -6,6 +6,16 @@ export class UserService {
     constructor(
         private readonly UserRepository: UserRepository
     ) {}
+
+    async addEventToUser(userId: string, eventId: string): Promise<void> {
+        const user = await this.UserRepository.Getuser(userId);
+        if (!user) {
+          throw new NotFoundException(`User with ID ${userId} not found`);
+        }
+    
+        user.events.push(eventId);
+        await user.save();
+      }
 
     async getUserById(id: string) {
         return await this.UserRepository.Getuser(id);
