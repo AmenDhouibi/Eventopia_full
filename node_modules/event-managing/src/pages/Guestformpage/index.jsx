@@ -43,11 +43,12 @@ export default function GuestformpagePage() {
         console.log(response.data);
         const guest = response.data;
         const guestId = guest._id;
+        console.log(guest)
+        console.log(guestId)
 
         try {
           const eventResponse = await axios.post(`http://localhost:3000/api/events/${eventId}/guests/${guestId}`, guest, {
             headers: {
-              "Content-Type": "application/json",
               "Authorization": `Bearer ${token}`, // Pass the token for authentication
             },
           });

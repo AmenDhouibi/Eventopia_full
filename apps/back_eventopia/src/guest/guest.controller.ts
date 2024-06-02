@@ -24,5 +24,10 @@ export class GuestController {
     const guest = await this.guestService.createGuest(user, eventId, flightId, luggage);
     return guest;
   }
+  
+  @Get(':id')
+  async findguests(@Param('id') guestId: string): Promise<IGuest | null> {
+    return this.guestService.findGuestById(guestId);
+  }
 
 }

@@ -92,17 +92,27 @@ export class EventController {
   //   return await this.eventService.UpdateEvent(eventId, updateEventDto);
   // }
 
-  @Post('/:eventId/guests/:Guest')
-  @UseGuards(AuthGuard())
-  async addGuestToEvent(
-    @Param('eventId') eventId: string,
-    @Param('GuestId') GuestId: string,
-  ) {
-    const event = await this.eventService.findById(eventId);
-    const guest = await this.eventService.findguestbyid(GuestId);
-    const updatedEvent = await this.eventService.addguest(eventId, guest);
-    return updatedEvent;
+  @Post('/:eventId/guests/:guestId') // Use 'guestId' instead of 'Guest'
+@UseGuards(AuthGuard())
+async addGuestToEvent(
+  @Param('eventId') eventId: string,
+  @Param('guestId') guestId: string, // Use 'guestId' instead of 'GuestId'
+) {
+  const event = await this.eventService.findById(eventId);
+  if (!event) {
+    console.log("Event not found!");
+    return { message: "Event not found" }; // or throw an error
   }
+
+  const guest = await this.eventService.findguestbyid(guestId); // Corrected method name
+  if (!guest) {
+    console.log("Guest not found");
+    return { message: "Guest not found" }; // or throw an error
+  }
+
+  const updatedEvent = await this.eventService.addguest(eventId, guest); // Corrected method name
+  return updatedEvent;
+}
 
 
   @Delete('/:eventId/guests/:userId')

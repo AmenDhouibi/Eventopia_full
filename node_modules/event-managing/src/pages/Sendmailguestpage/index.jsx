@@ -31,6 +31,7 @@ export default function SendmailguestpagePage() {
       try {
         console.log(user)
         const id =user.ownedEvents[0];
+        console.log(id)
         const token = localStorage.getItem("accessToken");
         const eventResponse = await axios.get(`http://localhost:3000/api/events/${id}`, {
           headers: {

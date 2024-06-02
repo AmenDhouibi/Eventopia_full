@@ -18,6 +18,10 @@ export class GuestService {
         return guest
     }
 
+    async findGuestById(id: string): Promise<IGuest | null> {
+        return this.GuestRepository.findById(id);
+      }
+
 
 
 }
