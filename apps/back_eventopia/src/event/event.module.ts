@@ -10,6 +10,7 @@ import { EventRoleModel } from './eventrole.model';
 import { MailingModule } from 'src/mailing/mailing.module';
 import { GuestModel } from 'src/guest/guest.model'; 
 import { StaffModel } from 'src/staff/staff.model';
+import { FlightModule } from 'src/flight/flight.module';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { StaffModel } from 'src/staff/staff.model';
     MailingModule,
     UserModule,
     AuthModule,
+    FlightModule,
   ],
   providers: [EventService, EventRepository], // Include EventRepository as a provider
   controllers: [EventController], 

@@ -87,6 +87,19 @@ export class EventController {
     return await this.eventService.UpdateEvent(eventId, updateEventDto);
   }
 
+  @Post('/:eventId/guests/:Guest')
+  @UseGuards(AuthGuard())
+  async addGuestToEvent(
+    @Param('eventId') eventId: string,
+    @Param('GuestId') GuestId: string,
+  ) {
+    const event = await this.eventService.findById(eventId);
+    const guest = await this.eventService.findguestbyid(GuestId);
+    const updatedEvent = await this.eventService.addguest(eventId, guest);
+    return updatedEvent;
+  }
+
+
   @Delete('/:eventId/guests/:userId')
   @UseGuards(AuthGuard())
   async removeGuestFromEvent(

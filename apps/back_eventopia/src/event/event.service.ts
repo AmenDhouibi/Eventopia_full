@@ -4,7 +4,6 @@ import { CreateEventDto } from './dto/create.dto';
 import { IUser } from 'src/user/user.model';
 import { IEvent } from './event.model';
 import { eventfilterdto } from './dto/event.filter.dto';
-import { UserService } from 'src/user/user.service';
 import { UpdateEventDto } from './dto/update.dto';
 import { IStaff } from 'src/staff/staff.model';
 import { IGuest } from 'src/guest/guest.model';
@@ -14,7 +13,6 @@ import { FlightService } from '../flight/flight.service';
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
-    private readonly userService: UserService,
     private readonly FlightService : FlightService,
 
     ) {}
@@ -78,6 +76,11 @@ export class EventService {
   async addstaff(eventId: string, staffId: IStaff): Promise<boolean> {
     return this.eventRepository.addstaff(eventId, staffId);
   }
+
+  async findguestbyid(guestId: string): Promise<IGuest> {
+    return this.eventRepository.findguestbyid(guestId);
+  }
+
   async assignDriverToGuest(eventId: string, guestId: string, driverId: string): Promise<boolean> {
     const event = await this.eventRepository.findById(eventId);
     if (!event) {

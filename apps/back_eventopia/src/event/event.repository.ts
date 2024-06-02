@@ -9,8 +9,6 @@ import { eventfilterdto } from './dto/event.filter.dto';
 import { IEventRole } from './eventrole.model';
 import { IStaff } from 'src/staff/staff.model';
 import { IGuest } from 'src/guest/guest.model';
-import { GuestRepository } from '../guest/guest.repository';
-import { StaffRepository } from '../staff/staff.repository';
 import { AvailabilityStatus } from '../guest/guest.model';
 
 
@@ -191,6 +189,10 @@ export class EventRepository {
 
   async updateDriverWithGuest(driverId: string, guestId: string): Promise<void> {
     await this.staffModel.findByIdAndUpdate(driverId, { $push: { guests: guestId } });
+  }
+
+  async findguestbyid(guestId: string): Promise<IGuest> {
+    return this.guestModel.findById(guestId);
   }
 
   async getGuestFlight_number(guestId: string){
