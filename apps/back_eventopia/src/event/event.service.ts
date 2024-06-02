@@ -8,12 +8,15 @@ import { UserService } from 'src/user/user.service';
 import { UpdateEventDto } from './dto/update.dto';
 import { IStaff } from 'src/staff/staff.model';
 import { IGuest } from 'src/guest/guest.model';
+import { FlightService } from '../flight/flight.service';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly eventRepository: EventRepository,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly FlightService : FlightService,
+
     ) {}
 
   async findAll(): Promise<IEvent[]> {
@@ -76,6 +79,30 @@ export class EventService {
     return this.eventRepository.addstaff(eventId, staffId);
   }
   async assignDriverToGuest(eventId: string, guestId: string, driverId: string): Promise<boolean> {
-    return this.eventRepository.assignDriverToGuest(eventId, guestId, driverId);
-}
+    const event = await this.eventRepository.findById(eventId);
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+    const driver = event.staff.find(staff => staff.toString() === driverId);
+    if (!driver) {
+      throw new NotFoundException(`User with ID ${driverId} is not a staff of the event`);
+    }
+    const guest = event.guests.find(guest => guest.toString() === guestId);
+    if (!guest) {
+      throw new NotFoundException(`User with ID ${guestId} is not a guest of the event`);
+    }
+    await this.eventRepository.updateGuestWithDriver(guestId, driverId);
+    await this.eventRepository.updateDriverWithGuest(driverId, guestId);
+
+    const flight_id = this.eventRepository.getGuestFlight_number(guestId);
+
+    this.FlightService.fetchFlightInformation(await flight_id);
+    
+
+    // a controller
+
+    const email = guest.user.haha;
+
+    return true;
+  }
 }

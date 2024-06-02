@@ -73,7 +73,7 @@ export class EventRepository {
   async create(createEventDto: CreateEventDto, user :IUser): Promise<IEvent> {
     const createdEvent = new this.eventModel({ ...createEventDto, event_manager: user }); 
     await createdEvent.save();
-    await this.createEventRole(createdEvent._id, user._id, 'manager');
+    // await this.createEventRole(createdEvent._id, user._id, 'manager');
 
     return createdEvent;
   }
@@ -179,35 +179,25 @@ export class EventRepository {
     return true;
   }
 
-  async createEventRole(eventId: string, userId: string, role: string): Promise<IEventRole> {
-    const eventRole = new this.eventRoleModel({ event: eventId, user: userId, role });
-    return await eventRole.save();
-  }
+  // async createEventRole(eventId: string, userId: string, role: string): Promise<IEventRole> {
+  //   const eventRole = new this.eventRoleModel({ event: eventId, user: userId, role });
+  //   return await eventRole.save();
+  // }
 
-  async assignDriverToGuest(eventId: string, guestId: string, driverId: string): Promise<boolean> {
-    const event = await this.eventModel.findById(eventId);
-    if (!event) {
-      throw new NotFoundException(`Event with ID ${eventId} not found`);
-    }
-    const driver = event.staff.find(staff => staff.toString() === driverId);
-    if (!driver) {
-      throw new NotFoundException(`User with ID ${driverId} is not a staff of the event`);
-    }
-    const guest = event.guests.find(guest => guest.toString() === guestId);
-    if (!guest) {
-      throw new NotFoundException(`User with ID ${guestId} is not a guest of the event`);
-    }
-    await this.updateGuestWithDriver(guestId, driverId);
-    await this.updateDriverWithGuest(driverId, guestId);
 
-    return true;
-  }
-
-  private async updateGuestWithDriver(guestId: string, driverId: string): Promise<void> {
+  async updateGuestWithDriver(guestId: string, driverId: string): Promise<void> {
     await this.guestModel.findByIdAndUpdate(guestId, { driver: driverId } , {AvailabilityStatus : AvailabilityStatus.LINKED_UP});
   }
 
-  private async updateDriverWithGuest(driverId: string, guestId: string): Promise<void> {
+  async updateDriverWithGuest(driverId: string, guestId: string): Promise<void> {
     await this.staffModel.findByIdAndUpdate(driverId, { $push: { guests: guestId } });
+  }
+
+  async getGuestFlight_number(guestId: string){
+    const guest = await this.guestModel.findById(guestId);
+    if (!guest) {
+      throw new NotFoundException(`Guest with ID ${guestId} not found`);
+    }
+    return guest.flightId;
   }
 }
