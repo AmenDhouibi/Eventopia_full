@@ -38,10 +38,12 @@ export default function SendmailguestpagePage() {
           },
         });
         
+        
         const event = eventResponse.data;
         console.log('Event Details:', event);
         setEventDesc(event.description)
         setEventName(event.name);
+        
       } catch (error) {
         console.error('Error fetching event details:', error);
       }
@@ -88,7 +90,7 @@ export default function SendmailguestpagePage() {
         if (!selectedEmails || selectedEmails.length === 0) {
           throw new Error('No valid recipients defined');
       }
-        const response = await axios.post(`http://localhost:3000/api/events/invite/guests/${id}`, {
+        const response = await axios.post(`http://localhost:3000/api/events/invite-guests/${id}`, {
             selectedEmails: selectedEmails,
             emailContent: emailContent,
         }, {
@@ -98,6 +100,8 @@ export default function SendmailguestpagePage() {
     });
         console.log(response.data);
         alert('Invitation emails sent successfully');
+        window.location.href = `/guestslistpage/${id}`;
+        
     } catch (error) {
         console.error('Error sending invitation emails:', error);
         alert('Failed to send invitation emails');

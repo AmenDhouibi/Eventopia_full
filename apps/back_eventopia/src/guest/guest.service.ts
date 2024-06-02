@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { IGuest, GuestModel, AvailabilityStatus } from './guest.model';
 import { IStaff } from 'src/staff/staff.model';
 import { GuestRepository } from './guest.repository';
+import { IUser } from 'src/user/user.model';
+import { EventRepository } from '../event/event.repository';
 
 @Injectable()
 export class GuestService {
@@ -11,10 +13,11 @@ export class GuestService {
         private readonly GuestRepository : GuestRepository,
     ) {}
 
-    async createGuest(username: string, event: string, flightId: string,luggage:number): Promise<IGuest> {
-        const guest = await this.GuestRepository.createguest(username, event, flightId, luggage);
+    async createGuest(user: IUser, event: string, flightId: string,luggage:number): Promise<IGuest> {
+        const guest = await this.GuestRepository.createguest(user, event, flightId, luggage);
         return guest
     }
+
 
 
 }

@@ -4,7 +4,7 @@ import axios from "axios";
 import { Img, Button, Input, Text, Heading } from "../../components";
 
 export default function GuestformpagePage() {
-  const { eventId } = useParams(); // Get the eventId from the route
+  const { eventId } = useParams();
   const [formData, setFormData] = useState({
     flight_id: "",
     phone_number: "",
@@ -25,15 +25,14 @@ export default function GuestformpagePage() {
     const user = JSON.parse(localStorage.getItem('user'));
 
     const guestData = {
+      user, 
       flightId: formData.flight_id,
-      phoneNumber: formData.phone_number,
-      luggage: formData.luggage_details,
-      eventId,
-      user, // Include the whole user object
+      luggage: parseInt(formData.luggage_details),
+ 
     };
 
     try {
-      const response = await axios.post('http://localhost:3000/api/guest', guestData, {
+      const response = await axios.post(`http://localhost:3000/api/guest/${eventId}`, guestData, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`, // Pass the token for authentication
@@ -41,12 +40,30 @@ export default function GuestformpagePage() {
       });
 
       if (response.status === 201) {
-        alert("Form submitted successfully!");
-        setFormData({
-          flight_id: "",
-          phone_number: "",
-          luggage_details: "",
-        });
+        console.log(response.data);
+        const guest = response.data;
+        const guestId = guest._id;
+
+        try {
+          const eventResponse = await axios.post(`http://localhost:3000/api/events/${eventId}/guests/${guestId}`, guest, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`, // Pass the token for authentication
+            },
+          });
+
+          if (eventResponse.status === 201) {
+            console.log(eventResponse.data)
+            alert("Form submitted successfully!");
+
+          
+          } else {
+            alert("Failed to link guest to event. Please try again.");
+          }
+        } catch (eventError) {
+          console.error("Error linking guest to event:", eventError);
+          alert("An error occurred while linking the guest to the event. Please try again.");
+        }
       } else {
         alert("Failed to submit the form. Please try again.");
       }
@@ -88,18 +105,6 @@ export default function GuestformpagePage() {
               shape="round"
               name="flight_id"
               value={formData.flight_id}
-              onChange={handleChange}
-              className="flex gap-[5px] self-stretch rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs sm:py-3 sm:pl-3 w-full"
-            />
-          </div>
-          <div className="mt-[5px] flex flex-col items-start gap-[3px] w-full">
-            <Text size="xs" as="p" className="ml-[3px] text-center">
-              phone number
-            </Text>
-            <Input
-              shape="round"
-              name="phone_number"
-              value={formData.phone_number}
               onChange={handleChange}
               className="flex gap-[5px] self-stretch rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs sm:py-3 sm:pl-3 w-full"
             />

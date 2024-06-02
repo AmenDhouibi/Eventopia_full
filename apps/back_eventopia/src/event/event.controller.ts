@@ -70,23 +70,40 @@ export class EventController {
   @UseGuards(AuthGuard())
   async findallguests(@Param('id') eventId: string,@GetUser() user: IUser): Promise<IGuest[]> {
     const event = await this.eventService.findById(eventId);
+    console.log(event)
+    if (!event){
+      console.log("no event found !!")
+    }
     if (user.id !== event.event_manager.id) {
-    return this.eventService.findallguests(eventId);
+    return this.eventService.findallguests(event._id);
   }
   else{
     throw new Error('You are not authorized to view this page');
   }
   }
 
-  @Patch('/:id')
+  // @Patch('/:id')
+  // @UseGuards(AuthGuard())
+  // async updateEvent(
+  //   @Param('id') eventId: string,
+  //   @Body() updateEventDto: UpdateEventDto,
+  //   @GetUser() user : IUser,
+  // ): Promise<IEvent> {
+  //   return await this.eventService.UpdateEvent(eventId, updateEventDto);
+  // }
+
+  @Post('/:eventId/guests/:Guest')
   @UseGuards(AuthGuard())
-  async updateEvent(
-    @Param('id') eventId: string,
-    @Body() updateEventDto: UpdateEventDto,
-    @GetUser() user : IUser,
-  ): Promise<IEvent> {
-    return await this.eventService.UpdateEvent(eventId, updateEventDto);
+  async addGuestToEvent(
+    @Param('eventId') eventId: string,
+    @Param('GuestId') GuestId: string,
+  ) {
+    const event = await this.eventService.findById(eventId);
+    const guest = await this.eventService.findguestbyid(GuestId);
+    const updatedEvent = await this.eventService.addguest(eventId, guest);
+    return updatedEvent;
   }
+
 
   @Delete('/:eventId/guests/:userId')
   @UseGuards(AuthGuard())
@@ -134,7 +151,7 @@ export class EventController {
 
   // INivite methods 
   
-@Post('invite/guests/:id')
+@Post('invite-guests/:id')
 @UseGuards(AuthGuard())
 async inviteGuests(
     @Body('emailContent') emailContent: string,

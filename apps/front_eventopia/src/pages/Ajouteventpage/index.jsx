@@ -87,6 +87,11 @@ export default function AjouteventpagePage() {
         },
       });
 
+    const userDetailsResponse = await axios.get(`http://localhost:3000/api/user/id/${user_id}`);
+    const updatedUser = JSON.stringify(userDetailsResponse.data);
+    // Set the updated user data in the local storage
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+
       console.log(response.data);
       alert("Event Added !");
     } catch (error) {

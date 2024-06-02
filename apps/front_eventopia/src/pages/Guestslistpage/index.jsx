@@ -2,18 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Img, Button, Text, Heading } from "../../components";
 import { FaTrashAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
-export default function GuestslistpagePage({ guests, allGuests }) {
+export default function GuestslistpagePage() {
   const [guestList, setGuestList] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedGuestIndex, setSelectedGuestIndex] = useState(null);
+  const { eventId } = useParams(); // Use useParams hook to retrieve the eventId
 
   useEffect(() => {
-    if (guests) {
-      setGuestList(guests);
-    }
-  }, [guests]);
+    const fetchGuests = async () => {
+      try {
+        console.log(eventId)
+        const accessToken = localStorage.getItem('accessToken');
+        console.log(accessToken)
+        const response = await axios.get(`http://localhost:3000/api/events/${eventId}/guests`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setGuestList(response.data);
+      } catch (error) {
+        console.error("Error fetching guests:", error);
+      }
+    };
+  
+    fetchGuests();
+  }, [eventId]); // Fetch guests when the event ID changes
+  
 
   const handleDelete = (index) => {
     // Remove the guest from db.event.guests
@@ -133,7 +150,7 @@ export default function GuestslistpagePage({ guests, allGuests }) {
           <div className="bg-white p-5 rounded-lg shadow-lg">
             <h3 className="text-xl mb-4">Select a Driver</h3>
             <ul>
-              {allGuests.map((driver, index) => (
+              {guestList.map((driver, index) => (
                 <li key={index} className="mb-2">
                   <button
                     className="text-blue-500 hover:underline"

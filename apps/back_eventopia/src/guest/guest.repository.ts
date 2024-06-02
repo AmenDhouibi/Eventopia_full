@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import GuestModel,{ IGuest } from './guest.model';
 import StaffModel, { IStaff } from 'src/staff/staff.model';
+import { IUser } from 'src/user/user.model';
 
 @Injectable()
 export class GuestRepository {
     constructor() {}
-    async createguest(username: string, event: string,flightId: string,luggage:number): Promise<IGuest> {
+    async createguest(userId: IUser['_id'], event: string,flightId: string,luggage:number): Promise<IGuest> {
         const newGuest = new GuestModel({
-            username,
+            user: userId,
             event,
             flightId,
             luggage,
@@ -15,10 +16,4 @@ export class GuestRepository {
         return newGuest.save();
     }
 
-    async addDriver(guestId: string, driver: IStaff['_id']): Promise<IGuest> {
-        const guest = await GuestModel.findById(guestId);
-        guest.driver = driver;
-        await guest.save();
-        return guest;
-}
 }

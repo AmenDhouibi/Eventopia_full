@@ -37,6 +37,7 @@ export default function ProfilepagePage() {
     }
 
     try {
+      localStorage.removeItem("accessToken")
       await axios.delete(`http://localhost:3000/api/user/delete`, {
         data: { email: userDetails.email },
         headers: {

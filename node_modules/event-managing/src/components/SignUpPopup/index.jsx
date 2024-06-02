@@ -27,7 +27,7 @@ const SignUpPopup = ({ isOpen, onClose }) => {
       });
       console.log(response.data);
       alert("Signed up !!")
-      isSuccess=true
+      setIsSuccess(true); // Update isSuccess state variable
       window.location.href = "/";
     } catch (error) {
       console.error(error);
