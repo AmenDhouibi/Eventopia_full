@@ -192,31 +192,35 @@ async inviteGuests(
 }
 
 
-  @Post('invite/staff/:id')
+  @Post('invite-staff/:id')
   @UseGuards(AuthGuard())
   async inviteStaff(
-      @Body('emails') emails: string[],
-      @Param('id') id: string,
-  ) {
-      try {
-          // Fetch event details
-          const event = await this.eventService.findById(id);
-          if (!event) {
-              throw new NotFoundException('Event not found');
-          }
+    @Body('emailContent') emailContent: string,
+    @Body('selectedEmails') selectedEmails: string[],
+    @Param('id') id: string,
+) {
+    console.log('Request payload received:', { emailContent, selectedEmails, id });
+    try {
+        // Fetch event details
+        const event = await this.eventService.findById(id);
+        if (!event) {
+            throw new NotFoundException('Event not found');
+        }
+        if(!event.name){
+            throw new NotFoundException('Event Name not found')
+        }
+        const eventname=event.name
+        const inviteLink = `http://localhost:5000/driverformpage/${id}`;
 
-          // Construct invite link
-          const inviteLink = `http://localhost:5000/${id}/invitestaff`;
-          const emailContent = ''; // Define your email content here
-          // Send invitation email
-          await this.MailingService.sendInvitationEmail(emails, event.name, inviteLink, emailContent);
+        // Send invitation email
+        await this.MailingService.sendInvitationEmail(selectedEmails, eventname, inviteLink, emailContent);
 
-          return { message: 'Staff invitations sent successfully' };
-      } catch (error) {
-          console.error('Error sending staff invitations:', error);
-          return { message: 'Failed to send staff invitations', error };
-      }
-  }
+        return { message: 'Driver invitations sent successfully' };
+    } catch (error) {
+        console.error('Error sending Driver invitations:', error);
+        return { message: 'Failed to send Driver invitations', error };
+    }
+}
 
   @Post('guests/:id/assigndriver')
   @UseGuards(AuthGuard())

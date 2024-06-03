@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { Img, Button, Input, Text, Heading } from "../../components";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
 
 export default function DriverformpagePage() {
+  const { eventId } = useParams();
   const [formData, setFormData] = useState({
     trunk_space: "",
     available_places: "",
@@ -17,20 +21,49 @@ export default function DriverformpagePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('accessToken');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const guestData = {
+      user, 
+      trunk_space: parseInt(formData.trunk_space),
+      places: parseInt(formData.available_places),
+ 
+    };
     try {
-      const response = await fetch("YOUR_API_ENDPOINT", {
-        method: "POST",
+      const response = await axios.post(`http://localhost:3000/api/staff/${eventId}`, guestData, {
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Pass the token for authentication
         },
-        body: JSON.stringify(formData),
       });
-      if (response.ok) {
-        alert("Form submitted successfully!");
-        setFormData({
-            trunk_space: "",
-            available_places: "",
-        });
+
+      if (response.status === 201) {
+        console.log(response.data);
+        const staff = response.data;
+        const staffId = staff._id;
+        console.log(staff)
+        console.log(staffId)
+
+        try {
+          const eventResponse = await axios.post(`http://localhost:3000/api/events/${eventId}/guests/${staffId}`, staff, {
+            headers: {
+              "Authorization": `Bearer ${token}`, // Pass the token for authentication
+            },
+          });
+
+          if (eventResponse.status === 201) {
+            console.log(eventResponse.data)
+            alert("Form submitted successfully!");
+
+          
+          } else {
+            alert("Failed to link driver to event. Please try again.");
+          }
+        } catch (eventError) {
+          console.error("Error linking driver to event:", eventError);
+          alert("An error occurred while linking the driver to the event. Please try again.");
+        }
       } else {
         alert("Failed to submit the form. Please try again.");
       }
@@ -39,7 +72,6 @@ export default function DriverformpagePage() {
       alert("An error occurred. Please try again.");
     }
   };
-
   return (
     <>
       <header className="absolute left-0 right-0 top-[2px] m-auto flex w-[98%] items-center justify-between gap-5 sm:relative sm:flex-col">

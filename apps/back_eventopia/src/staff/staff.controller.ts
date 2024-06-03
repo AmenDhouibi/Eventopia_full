@@ -14,15 +14,16 @@ export class StaffController {
         private readonly staffService: StaffService,
     ) {}
 
-    @Post()
     @UseGuards(AuthGuard())
-    async createStaff(
-        @GetUser() user: IUser,
-        @Param('id')eventid :string,
-        @Body() CreateStaffDto :CreateStaffDto,)
-        : Promise<IStaff> {
-        const staff = await this.staffService.createStaff(user.username, eventid, CreateStaffDto.trunk_space, CreateStaffDto.places);
-        return staff;
-    }
+    @Post(':id')
+  async create(
+    @Param('id') eventId: string,
+    @Body() guestData: CreateStaffDto,
+  ): Promise<IStaff> {
+    const { user, trunk_space, places } = guestData;
+    const driver = await this.staffService.createStaff(user._id, eventId, trunk_space, places);
+    return driver;
+  }
+  
 
 }

@@ -12,7 +12,7 @@ export default function SendmailguestpagePage() {
   const user = JSON.parse(localStorage.getItem('user'))
   const initialEmailTemplate = `Greetings,
 
-  I'm ${user.username}, the event manager at .... We would be honored to invite you to speak at our event celebrating ${eventDesc}!!. 
+  I'm ${user.username}, the event manager at .... We would be honored to invite to join our event celebrating ${eventDesc}!! AS a Driver four our guests. 
   The event is scheduled for ... . The ${eventName} event is [full-day/half-day] program being curated by Organizing_club.
   Our goal is ............... . 
   Your discussion on Event_description will be a great addition to our event. 
@@ -88,7 +88,7 @@ export default function SendmailguestpagePage() {
         if (!selectedEmails || selectedEmails.length === 0) {
           throw new Error('No valid recipients defined');
       }
-        const response = await axios.post(`http://localhost:3000/api/events/invite/guests/${id}`, {
+        const response = await axios.post(`http://localhost:3000/api/events/invite-staff/${id}`, {
             selectedEmails: selectedEmails,
             emailContent: emailContent,
         }, {
