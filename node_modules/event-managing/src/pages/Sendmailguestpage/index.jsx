@@ -1,25 +1,58 @@
-import React, { useState } from "react";
+import React, { useState,useEffect  } from "react";
 import { Helmet } from "react-helmet";
 import { Button, Img, Text, Heading } from "../../components";
 import axios from "axios";
 
 
 export default function SendmailguestpagePage() {
+
+  const [eventName, setEventName] = useState('');
+  const [eventDesc, setEventDesc] = useState('');
+
+  const user = JSON.parse(localStorage.getItem('user'))
   const initialEmailTemplate = `Greetings,
 
-I'm Event_manager, the event manager at Event_name. We would be honored to invite you to speak at our event celebrating Event_description. 
-The event is scheduled for Event_date. The Event_name event is [full-day/half-day] program being curated by Organizing_club.
-Our goal is ............... . 
-Your discussion on Event_description will be a great addition to our event. 
-We believe your voice would be a critical addition to the stage.
-
-Looking forward to your response!
-Best regards, 
-Event_manager`;
+  I'm ${user.username}, the event manager at .... We would be honored to invite you to speak at our event celebrating ${eventDesc}!!. 
+  The event is scheduled for ... . The ${eventName} event is [full-day/half-day] program being curated by Organizing_club.
+  Our goal is ............... . 
+  Your discussion on Event_description will be a great addition to our event. 
+  We believe your voice would be a critical addition to the stage.
+  
+  Looking forward to your response!
+  Best regards, 
+  ${user.username}`;
 
   const [emailContent, setEmailContent] = useState(initialEmailTemplate);
   const [recipientEmail, setRecipientEmail] = useState("");
-  const [selectedEmails, setSelectedEmails] = useState(["amen_dhouibi@yahoo.com"]);
+  const [selectedEmails, setSelectedEmails] = useState([user.email]);
+
+  useEffect(() => {
+    const fetchEventDetails = async () => {
+      try {
+        console.log(user)
+        const id =user.ownedEvents[0];
+        console.log(id)
+        const token = localStorage.getItem("accessToken");
+        const eventResponse = await axios.get(`http://localhost:3000/api/events/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        
+        const event = eventResponse.data;
+        console.log('Event Details:', event);
+        setEventDesc(event.description)
+        setEventName(event.name);
+        
+      } catch (error) {
+        console.error('Error fetching event details:', error);
+      }
+    };
+    
+    fetchEventDetails();
+  }, [user]);
+
 
   const handleTextareaChange = (e) => {
     setEmailContent(e.target.value);
@@ -42,17 +75,25 @@ Event_manager`;
 
   const handleSendEmails = async () => {
     try {
-        const id="6628e02197d885369a5bdc8b"
+        const id = user.ownedEvents[0];
         const token = localStorage.getItem("accessToken")
+        const eventResponse = await axios.get(`http://localhost:3000/api/events/${id}`, {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        },
+        });
+    
+        const event = eventResponse.data;
+        console.log('Event Details:', event);
         console.log("token")
         console.log(selectedEmails)
         console.log(emailContent)
         if (!selectedEmails || selectedEmails.length === 0) {
           throw new Error('No valid recipients defined');
       }
-        const response = await axios.post(`http://localhost:3000/api/events/invite/guests/${id}`, {
+        const response = await axios.post(`http://localhost:3000/api/events/invite-guests/${id}`, {
             selectedEmails: selectedEmails,
-            emailContent: emailContent
+            emailContent: emailContent,
         }, {
           headers: {
               Authorization: `Bearer ${token}`
@@ -60,6 +101,8 @@ Event_manager`;
     });
         console.log(response.data);
         alert('Invitation emails sent successfully');
+        window.location.href = `/guestslistpage/${id}`;
+        
     } catch (error) {
         console.error('Error sending invitation emails:', error);
         alert('Failed to send invitation emails');
@@ -100,7 +143,7 @@ Event_manager`;
             
             <Text className="text-shadow-ts mt-[26px] flex items-center justify-center rounded-[30px] bg-blue_gray-100 px-[35px] pb-[17px] pt-[13px] sm:px-5">
               <span className="text-blue_gray-900">Object : Invitation to Join US at&nbsp;</span>
-              <span className="italic text-gray_600">Event_name</span>
+              <span className="italic text-gray_600">{eventName}</span>
             </Text>
 
             <div className="mx-auto mt-[9px] flex w-full max-w-[1000px] self-stretch rounded-[30px] bg-blue_gray-100 pb-[38px] pl-[39px] pr-9 pt-[39px] shadow-xs md:p-5">

@@ -56,8 +56,10 @@ async sendInvitationEmail(to: string | string[], eventName: string, inviteLink: 
   // Use the provided email content instead of the default text
   const subject = `You're invited to ${eventName}!`;
   const text = emailContent;
-  const html = `<p>${emailContent}</p>`;
-
+  const html = `
+  <p>${emailContent}</p>
+  <p><a href="${inviteLink}">Click here to join the event</a></p>
+`;
   // Send the email using the provided content
   try {
       // Ensure `to` is a valid array of email addresses

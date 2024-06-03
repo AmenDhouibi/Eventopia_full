@@ -1,22 +1,55 @@
-import React, { useState } from "react";
+import React, { useState,useEffect  } from "react";
 import { Helmet } from "react-helmet";
 import { Button, Img, Text, Heading } from "../../components";
 import axios from "axios";
 
-export default function SendmaildriverpagePage() {
+
+export default function SendmailguestpagePage() {
+
+  const [eventName, setEventName] = useState('');
+  const [eventDesc, setEventDesc] = useState('');
+
+  const user = JSON.parse(localStorage.getItem('user'))
   const initialEmailTemplate = `Greetings,
-  I'm Event_manager, the Event Manager at Event_name. We would be thrilled to have you participate in our upcoming event, on Event_date at Event_location.
-  Highlights:
-  Time: Event_date
-  Activities: Perform airport shuttle services to our event's speakers
-  Your presence would significantly enhance the event, offering you an opportunity to showcase your skills and engage with fans.
-  Please let us know if you're available to join us, and feel free to contact me directly at Event_manager_phone or Event_manager_mail for more details or to discuss further. Looking forward to your participation!
-  Best regards,
-  Event_manager`;
+
+  I'm ${user.username}, the event manager at .... We would be honored to invite you to speak at our event celebrating ${eventDesc}!!. 
+  The event is scheduled for ... . The ${eventName} event is [full-day/half-day] program being curated by Organizing_club.
+  Our goal is ............... . 
+  Your discussion on Event_description will be a great addition to our event. 
+  We believe your voice would be a critical addition to the stage.
+  
+  Looking forward to your response!
+  Best regards, 
+  ${user.username}`;
 
   const [emailContent, setEmailContent] = useState(initialEmailTemplate);
   const [recipientEmail, setRecipientEmail] = useState("");
-  const [selectedEmails, setSelectedEmails] = useState(["amineyahya@insat.ucar.tn"]);
+  const [selectedEmails, setSelectedEmails] = useState([user.email]);
+
+  useEffect(() => {
+    const fetchEventDetails = async () => {
+      try {
+        console.log(user)
+        const id =user.ownedEvents[0];
+        const token = localStorage.getItem("accessToken");
+        const eventResponse = await axios.get(`http://localhost:3000/api/events/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        const event = eventResponse.data;
+        console.log('Event Details:', event);
+        setEventDesc(event.description)
+        setEventName(event.name);
+      } catch (error) {
+        console.error('Error fetching event details:', error);
+      }
+    };
+    
+    fetchEventDetails();
+  }, [user]);
+
 
   const handleTextareaChange = (e) => {
     setEmailContent(e.target.value);
@@ -39,34 +72,42 @@ export default function SendmaildriverpagePage() {
 
   const handleSendEmails = async () => {
     try {
-      const id = "6628e02197d885369a5bdc8b";
-      const token = localStorage.getItem("accessToken");
-      console.log("token", token);
-      console.log("selectedEmails", selectedEmails);
-      console.log("emailContent", emailContent);
-      if (!selectedEmails || selectedEmails.length === 0) {
-        throw new Error('No valid recipients defined');
-      }
-      const response = await axios.post(`http://localhost:3000/api/events/invite/guests/${id}`, {
-        selectedEmails: selectedEmails,
-        emailContent: emailContent
-      }, {
+        const id = user.ownedEvents[0];
+        const token = localStorage.getItem("accessToken")
+        const eventResponse = await axios.get(`http://localhost:3000/api/events/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      console.log(response.data);
-      alert('Invitation emails sent successfully');
+        Authorization: `Bearer ${token}`,
+        },
+        });
+    
+        const event = eventResponse.data;
+        console.log('Event Details:', event);
+        console.log("token")
+        console.log(selectedEmails)
+        console.log(emailContent)
+        if (!selectedEmails || selectedEmails.length === 0) {
+          throw new Error('No valid recipients defined');
+      }
+        const response = await axios.post(`http://localhost:3000/api/events/invite/guests/${id}`, {
+            selectedEmails: selectedEmails,
+            emailContent: emailContent,
+        }, {
+          headers: {
+              Authorization: `Bearer ${token}`
+          }
+    });
+        console.log(response.data);
+        alert('Invitation emails sent successfully');
     } catch (error) {
-      console.error('Error sending invitation emails:', error);
-      alert('Failed to send invitation emails');
+        console.error('Error sending invitation emails:', error);
+        alert('Failed to send invitation emails');
     }
-  };
+};
 
   return (
     <>
       <Helmet>
-        <title>Invite Driver - Send Invitations for Event Participation</title>
+        <title>Start Choosing Your Drivers </title>
       </Helmet>
 
       <div className="relative h-[1080px] w-full bg-white-A700 bg-[url(/public/images/img_home_page.png)] bg-cover bg-no-repeat pb-[130px] pl-[31px] pr-[134px] pt-[23px] md:pb-5 md:pr-5 sm:p-5">
@@ -97,7 +138,7 @@ export default function SendmaildriverpagePage() {
             
             <Text className="text-shadow-ts mt-[26px] flex items-center justify-center rounded-[30px] bg-blue_gray-100 px-[35px] pb-[17px] pt-[13px] sm:px-5">
               <span className="text-blue_gray-900">Object : Invitation to Join US at&nbsp;</span>
-              <span className="italic text-gray_600">Event_name</span>
+              <span className="italic text-gray_600">{eventName}</span>
             </Text>
 
             <div className="mx-auto mt-[9px] flex w-full max-w-[1000px] self-stretch rounded-[30px] bg-blue_gray-100 pb-[38px] pl-[39px] pr-9 pt-[39px] shadow-xs md:p-5">

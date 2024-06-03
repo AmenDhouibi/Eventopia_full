@@ -9,7 +9,7 @@ export enum AvailabilityStatus {
 }
 
 export interface IGuest extends Document {
-    user: IUser['username'];
+    user: IUser['_id'];
     event: IEvent['_id'];
     availabilityStatus: AvailabilityStatus;
     flightId: string;
@@ -18,7 +18,7 @@ export interface IGuest extends Document {
 }
 
 const GuestSchema: Schema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User collection
     event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
     availabilityStatus: { type: String, enum: Object.values(AvailabilityStatus), required: true ,default : AvailabilityStatus.NO_PICK_UP },
     flightId: { type: String, required: true },

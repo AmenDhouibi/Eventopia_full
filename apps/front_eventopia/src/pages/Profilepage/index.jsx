@@ -12,6 +12,20 @@ export default function ProfilepagePage() {
       const accessToken = localStorage.getItem("accessToken");
       let decodedToken;
       try {
+        const user=JSON.parse(localStorage.getItem('user'))
+        console.log(user)
+        const id =user.ownedEvents[0];
+        console.log(id)
+        const token = localStorage.getItem("accessToken");
+        const eventResponse = await axios.get(`http://localhost:3000/api/events/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        
+        const event = eventResponse.data;
+        console.log('Event Details:', event);
         decodedToken = jwtDecode(accessToken);
         console.log('Decoded Token:', decodedToken);
       } catch (err) {
@@ -37,6 +51,7 @@ export default function ProfilepagePage() {
     }
 
     try {
+      localStorage.removeItem("accessToken")
       await axios.delete(`http://localhost:3000/api/user/delete`, {
         data: { email: userDetails.email },
         headers: {

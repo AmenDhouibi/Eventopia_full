@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode'; // Import jwtDecode as a named export
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
 
-const SignInPopup = ({ isOpen, onClose,updateLoginStatus }) => {
+const SignInPopup = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userId, setUserId] = useState('');
@@ -50,17 +50,13 @@ const SignInPopup = ({ isOpen, onClose,updateLoginStatus }) => {
       setUser(userDetailsString)
       console.log(user)
       setIsLoggedIn(true);
-      updateLoginStatus(true);
       localStorage.setItem('accessToken', accesstoken);
       localStorage.setItem('user', userDetailsString);
 
+
       alert(`Hello , you successfully logged in`);
+      window.location.href = "/";
 
-      // Store access token for later use
-      
-
-      // Close the sign-in popup
-      onClose();
     } catch (error) {
       console.error('Sign in failed', error);
       alert('Please Verify ur Credentiels ! ')
