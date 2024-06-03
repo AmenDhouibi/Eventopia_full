@@ -40,9 +40,9 @@ const ExploreeventspagePage = () => {
         <div className="relative mb-[7px] h-[50px] w-[15%] sm:w-full">
             <Img src="images/img_frame.svg" alt="image" className="absolute left-10 top-10 m-auto h-[45px] w-[45px]" />
             <Text size="lg" as="p" className="absolute left-10 top-10 m-auto text-center lowercase">
-              <a href="/">eventopia</a>
+                <a href="/">eventopia</a>
             </Text>
-          </div>
+        </div>
         </header>
         
         <div className="mx-auto mt-[30px] flex w-full max-w-[90%] items-start justify-between gap-0 md:flex-col md:p-5">
@@ -56,7 +56,7 @@ const ExploreeventspagePage = () => {
                       className="w-full rounded-[20px] bg-white p-4 shadow-lg"
                     >
                     <Text size="sm" as="p" className="text-left md:w-full">
-                    <strong style={{ color: 'red' }}>{event.name}</strong> hosted by{" "}
+                    <strong style={{ color: '#ed4c5c' }}>{event.name}</strong> hosted by{" "}
                     <strong>{event.managerName}</strong>. <br />
                     Join us with guests: {event.guests?.join(", ")}. <br />
                     Sponsored by: {event.sponsors?.join(", ")}. <br />

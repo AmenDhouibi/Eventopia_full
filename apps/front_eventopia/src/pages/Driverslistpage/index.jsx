@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
 import { Img, Button, Text, Heading } from "../../components";
 import { FaTrashAlt } from "react-icons/fa";
 
