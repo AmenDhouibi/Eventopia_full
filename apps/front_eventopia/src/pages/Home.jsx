@@ -100,11 +100,14 @@ const Home = () => {
               </Button>
             </Link>
             
-            <Img
-              src="images/img_frame_blue_gray_900.svg"
-              alt="image_one"
-              className="ml-[41px] h-[45px] w-[17%] sm:ml-0 sm:w-full"
-            />
+            <Link to="/profilepage">
+  <Img
+    src="images/img_frame_blue_gray_900.svg"
+    alt="image_one"
+    className="ml-[41px] h-[45px] w-[17%] sm:ml-0 sm:w-full"
+  />
+</Link>
+            
           </div>
         </header>
         <Heading
