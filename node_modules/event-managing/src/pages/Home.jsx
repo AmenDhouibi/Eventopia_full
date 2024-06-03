@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Text, Button, Img, Heading } from "../components";
 import SignInPopup from "../components/SignInPopup";
@@ -10,6 +10,7 @@ const Home = () => {
   const [isSignUpOpen, setSignUpOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -67,6 +68,14 @@ const Home = () => {
     setSignInOpen(false); // Ensure sign-in popup is closed
   };
 
+  const openProfile = () => {
+    if (isLoggedIn) {
+      navigate("/profilepage");
+    } else {
+      alert('Please make sure to sign in ! ')
+    }
+  }
+
   return (
     <>
       <div className="mb-24 flex flex-col items-center">
@@ -78,16 +87,24 @@ const Home = () => {
             </Text>
         </div>
           <div className="flex w-[25%] items-center justify-center md:w-full sm:flex-col">
-            <Link to="/signin">
-              <Button
-                size="xs"
-                shape="square"
-                className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
-                onClick={openSignInPopup}
-              >
-                sign in
-              </Button>
-            </Link>
+          
+            <Button
+              size="xs"
+              shape="square"
+              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+              onClick={openProfile}
+            >
+              Profile
+            </Button>
+            
+            <Button
+              size="xs"
+              shape="square"
+              className="m-[5px] w-full flex-1 font-medium lowercase sm:ml-0 sm:self-stretch sm:px-5"
+              onClick={openSignInPopup}
+            >
+              sign in
+            </Button>
 
             <Link to="/signup">
               <Button

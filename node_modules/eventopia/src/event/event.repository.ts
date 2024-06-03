@@ -9,6 +9,7 @@ import { eventfilterdto } from './dto/event.filter.dto';
 import { IEventRole } from './eventrole.model';
 import { IStaff } from 'src/staff/staff.model';
 import { IGuest } from 'src/guest/guest.model';
+import { AvailabilityStatus } from '../guest/guest.model';
 
 
 @Injectable()
@@ -18,6 +19,8 @@ export class EventRepository {
   constructor(
     @InjectModel('Event') private readonly eventModel: Model<IEvent>,
     @InjectModel('EventRole') private readonly eventRoleModel: Model<IEventRole>,
+    @InjectModel('Guest') private readonly guestModel: Model<IGuest>,
+    @InjectModel('Staff') private readonly staffModel: Model<IStaff>,
     ) {}
 
   async findAll(): Promise<IEvent[]> {
@@ -68,7 +71,7 @@ export class EventRepository {
   async create(createEventDto: CreateEventDto, user :IUser): Promise<IEvent> {
     const createdEvent = new this.eventModel({ ...createEventDto, event_manager: user }); 
     await createdEvent.save();
-    await this.createEventRole(createdEvent._id, user._id, 'manager');
+    // await this.createEventRole(createdEvent._id, user._id, 'manager');
 
     return createdEvent;
   }
@@ -154,8 +157,49 @@ export class EventRepository {
     await event.save();
   }
 
-  private async createEventRole(eventId: string, userId: string, role: string): Promise<IEventRole> {
-    const eventRole = new this.eventRoleModel({ event: eventId, user: userId, role });
-    return await eventRole.save();
+  async addguest(eventId: string, guestId: IGuest): Promise<boolean> {
+    const event = await this.eventModel.findById(eventId);
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+    event.guests.push(guestId);
+    await event.save();
+    return true;
+  }
+
+  async addstaff(eventId: string, staffId: IStaff): Promise<boolean> {
+    const event = await this.eventModel.findById(eventId);
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${eventId} not found`);
+    }
+    event.staff.push(staffId);
+    await event.save();
+    return true;
+  }
+
+  // async createEventRole(eventId: string, userId: string, role: string): Promise<IEventRole> {
+  //   const eventRole = new this.eventRoleModel({ event: eventId, user: userId, role });
+  //   return await eventRole.save();
+  // }
+
+
+  async updateGuestWithDriver(guestId: string, driverId: string): Promise<void> {
+    await this.guestModel.findByIdAndUpdate(guestId, { driver: driverId } , {AvailabilityStatus : AvailabilityStatus.LINKED_UP});
+  }
+
+  async updateDriverWithGuest(driverId: string, guestId: string): Promise<void> {
+    await this.staffModel.findByIdAndUpdate(driverId, { $push: { guests: guestId } });
+  }
+
+  async findguestbyid(guestId: string): Promise<IGuest> {
+    return this.guestModel.findById(guestId);
+  }
+
+  async getGuestFlight_number(guestId: string){
+    const guest = await this.guestModel.findById(guestId);
+    if (!guest) {
+      throw new NotFoundException(`Guest with ID ${guestId} not found`);
+    }
+    return guest.flightId;
   }
 }

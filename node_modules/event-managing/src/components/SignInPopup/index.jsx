@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { jwtDecode } from 'jwt-decode'; // Import jwtDecode as a named export
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
+import { Img, Text } from "../../components";
 
 const SignInPopup = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
@@ -69,7 +70,17 @@ const SignInPopup = ({ isOpen, onClose }) => {
       <Helmet>
         <title>Sign In</title>
       </Helmet>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="relative mb-[7px] h-[50px] w-[15%] sm:w-full">
+          <Img
+            src="images/img_frame.svg"
+            alt="image"
+            className="absolute left-10 top-10 m-auto h-[45px] w-[45px]"
+          />
+          <Text size="lg" as="p" className="absolute left-10 top-10 m-auto text-center lowercase">
+            <a href="/">eventopia</a>
+          </Text>
+        </div>
+      <div className="flex items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h2 className="text-2xl font-semibold mb-6 text-center">Sign In</h2>
           <form className="space-y-6">

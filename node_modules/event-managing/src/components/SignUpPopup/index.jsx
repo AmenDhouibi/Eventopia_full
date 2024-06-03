@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
+import { Img, Text } from "../../components";
 
 const SignUpPopup = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState("");
@@ -41,7 +42,17 @@ const SignUpPopup = ({ isOpen, onClose }) => {
       <Helmet>
         <title>Sign Up</title>
       </Helmet>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="relative mb-[7px] h-[50px] w-[15%] sm:w-full">
+          <Img
+            src="images/img_frame.svg"
+            alt="image"
+            className="absolute left-10 top-10 m-auto h-[45px] w-[45px]"
+          />
+          <Text size="lg" as="p" className="absolute left-10 top-10 m-auto text-center lowercase">
+            <a href="/">eventopia</a>
+          </Text>
+        </div>
+      <div className="flex items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h2 className="text-2xl font-semibold mb-6 text-center">Sign Up</h2>
           

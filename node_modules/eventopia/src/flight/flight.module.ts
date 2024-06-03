@@ -5,6 +5,6 @@ import { FlightService } from './flight.service';
 @Module({
     controllers: [FlightController],
     providers: [FlightService], // repos
-    exports: [],
+    exports: [FlightService],
 })
 export class FlightModule {}
