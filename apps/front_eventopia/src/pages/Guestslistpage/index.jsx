@@ -90,8 +90,7 @@ export default function GuestslistpagePage() {
           </Text>
         </div>
 
-        <Link to="/driverslistpage">
-          <Button
+        <Button
             color="blue_gray_100_7f"
             size="xs"
             variant="fill"
@@ -104,9 +103,8 @@ export default function GuestslistpagePage() {
             }
             className="mb-3 mr-[3px] mt-[35px] min-w-[200px] gap-[25px] self-end rounded-[23px] font-semibold md:mr-0 sm:px-3"
           >
-            Drivers' List
-          </Button>
-        </Link>
+            <a href={`/driverslistpage/${eventId}`}>Drivers List</a>
+            </Button>
       </header>
       <div className="absolute left-[17%] m-auto h-[300px] w-[70%]">
         <div className="absolute bottom-[0.00px] right-[0.00px] m-auto flex flex-col items-center rounded-[20px] bg-blue_gray-100_7f p-[5px] shadow-xs sm:p-3 w-full">

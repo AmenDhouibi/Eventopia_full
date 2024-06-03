@@ -20,6 +20,10 @@ export class EventService {
 
     ) {}
 
+    async finddriverbyid(driverId: string): Promise<IStaff> {
+      return this.eventRepository.finddriverbyid(driverId);
+    }
+
   async findAll(): Promise<IEvent[]> {
     return this.eventRepository.findAll();
   }

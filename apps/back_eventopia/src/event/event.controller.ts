@@ -92,6 +92,20 @@ export class EventController {
   //   return await this.eventService.UpdateEvent(eventId, updateEventDto);
   // }
 
+  @Post('/:eventId/staff/:staffId')
+  @UseGuards(AuthGuard())
+  async addStaffToEvent(
+    @Param('eventId') eventId: string,
+    @Param('staffId') staffId: string,
+  ) {
+    const event = await this.eventService.findById(eventId);
+    const staff = await this.eventService.finddriverbyid(staffId);
+    const updatedEvent = await this.eventService.addstaff(eventId, staff);
+    return updatedEvent;
+  }
+
+
+
   @Post('/:eventId/guests/:guestId') // Use 'guestId' instead of 'Guest'
 @UseGuards(AuthGuard())
 async addGuestToEvent(

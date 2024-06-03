@@ -46,7 +46,7 @@ export default function DriverformpagePage() {
         console.log(staffId)
 
         try {
-          const eventResponse = await axios.post(`http://localhost:3000/api/events/${eventId}/guests/${staffId}`, staff, {
+          const eventResponse = await axios.post(`http://localhost:3000/api/events/${eventId}/staff/${staffId}`, staff, {
             headers: {
               "Authorization": `Bearer ${token}`, // Pass the token for authentication
             },

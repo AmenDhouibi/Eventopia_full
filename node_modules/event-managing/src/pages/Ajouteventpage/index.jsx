@@ -10,8 +10,6 @@ export default function AjouteventpagePage() {
     place: "",
     time: "",
     description: "",
-    guests: "",
-    staff: "",
     event_manager: "",
     poster: "",
     numberOfAttendees: "",
@@ -23,7 +21,7 @@ export default function AjouteventpagePage() {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    if (id === 'guests' || id === 'staff' || id === 'sponsors') {
+    if (id === 'sponsors') {
       setFormData({ ...formData, [id]: value.split(',') });
     } else {
       setFormData({ ...formData, [id]: value });
@@ -51,32 +49,14 @@ export default function AjouteventpagePage() {
         return;
       }
 
-      // Fetch guests, staff, and sponsors
-      const guests = await Promise.all(formData.guests.map(async (guest) => {
-        const response = await axios.get(`http://localhost:3000/api/user/${guest}`);
-        return response.data;
-      }));
-
-      const staff = await Promise.all(formData.staff.map(async (staffMember) => {
-        const response = await axios.get(`http://localhost:3000/api/user/${staffMember}`);
-        return response.data;
-      }));
-
-     /* const sponsors = await Promise.all(formData.sponsors.map(async (sponsor) => {
-        const response = await axios.get(`http://localhost:3000/api/user/${sponsor}`);
-        return response.data;
-     }));
-     */
       const createEventDto = {
         name: formData.eventname,
         time: formData.time,
         description: formData.description,
-        guests: guests,
-        staff: staff,
         event_manager: event_manager,
         poster: formData.poster,
         numberOfAttendees: parseInt(formData.numberOfAttendees),
-        //sponsors: sponsors,
+        sponsors: formData.sponsors,
         organizingClub: formData.organizingClub,
         place: formData.place,
       };
@@ -87,10 +67,10 @@ export default function AjouteventpagePage() {
         },
       });
 
-    const userDetailsResponse = await axios.get(`http://localhost:3000/api/user/id/${user_id}`);
-    const updatedUser = JSON.stringify(userDetailsResponse.data);
-    // Set the updated user data in the local storage
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+      const userDetailsResponse = await axios.get(`http://localhost:3000/api/user/id/${user_id}`);
+      const updatedUser = JSON.stringify(userDetailsResponse.data);
+      // Set the updated user data in the local storage
+      localStorage.setItem('user', JSON.stringify(updatedUser));
 
       console.log(response.data);
       alert("Event Added !");
@@ -143,32 +123,6 @@ export default function AjouteventpagePage() {
               id="description"
               type="text"
               value={formData.description}
-              onChange={handleChange}
-              className="rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs"
-            />
-
-            <label htmlFor="guests" className="text-xs mt-[5px]">
-              Guests
-            </label>
-            <Input
-              shape="round"
-              name="guests"
-              id="guests"
-              type="text"
-              value={formData.guests}
-              onChange={handleChange}
-              className="rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs"
-            />
-
-            <label htmlFor="staff" className="text-xs mt-[5px]">
-              Staff
-            </label>
-            <Input
-              shape="round"
-              name="staff"
-              id="staff"
-              type="text"
-              value={formData.staff}
               onChange={handleChange}
               className="rounded-[20px] bg-blue_gray-100 pb-[17px] pl-[14px] pt-[13px] shadow-xs"
             />

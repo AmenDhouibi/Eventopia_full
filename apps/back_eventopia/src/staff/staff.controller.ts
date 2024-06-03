@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, UseGuards,Get } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { IStaff } from './staff.model';
 import { IUser } from 'src/user/user.model';
@@ -24,6 +24,12 @@ export class StaffController {
     const driver = await this.staffService.createStaff(user._id, eventId, trunk_space, places);
     return driver;
   }
+
+  @Get('/:id')
+    async findStaff(@Param('id') staffId: string): Promise<IStaff> {
+        return this.staffService.findbyid(staffId);
+    }
+
   
 
 }

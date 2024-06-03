@@ -23,6 +23,10 @@ export class EventRepository {
     @InjectModel('Staff') private readonly staffModel: Model<IStaff>,
     ) {}
 
+    async finddriverbyid(driverId: string): Promise<IStaff> {
+      return this.staffModel.findById(driverId);
+    }
+
   async findAll(): Promise<IEvent[]> {
     const events = await this.eventModel.find().exec();
     if (!events.length) {

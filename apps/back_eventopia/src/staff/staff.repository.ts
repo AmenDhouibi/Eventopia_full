@@ -17,6 +17,6 @@ export class StaffRepository {
     }
 
     async findbyid(id:string) :Promise<IStaff>{
-        return StaffModel.findOne({ userId: id });
+        return StaffModel.findById(id);
     }
 }
